@@ -1689,7 +1689,7 @@ function beginFireworks() {
 	// ====== SÉQUENCE FINALE après 1 minute ======
 	setTimeout(() => {
 		launchEpicFinale();
-	}, 60000); // 60 secondes
+	}, 135000); // 2 minutes 15 secondes
 }
 
 // Avertissement visuel avant la finale
@@ -1787,7 +1787,8 @@ function showHeartGalleryEnd() {
 		"to{text-shadow:0 0 40px #ff69b4,0 0 80px #ff1493,0 0 120px #ff69b4;transform:scale(1.04)}}" +
 		"@keyframes slideInEnd{from{opacity:0;transform:translateY(40px)}to{opacity:1;transform:translateY(0)}}" +
 		"@keyframes shimmerText{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}" +
-		"@keyframes floatHeart{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-110vh);opacity:0}}";
+		"@keyframes floatHeart{0%{transform:translateY(0);opacity:1}100%{transform:translateY(-110vh);opacity:0}}" +
+		"@keyframes heartPopEnd{from{transform:scale(0) rotate(-20deg);opacity:0}to{transform:scale(1) rotate(0);opacity:1}}";
 	overlay.appendChild(style);
 
 	// Étoiles fond
@@ -1839,24 +1840,49 @@ function showHeartGalleryEnd() {
 	subtitle.textContent = "LATIFA \uD83D\uDC97";
 	overlay.appendChild(subtitle);
 
-	// Colonne d'images — une par une, pleine largeur
-	const col = document.createElement("div");
-	col.style.cssText = "display:flex;flex-direction:column;align-items:center;" +
-		"gap:16px;width:100%;max-width:420px;position:relative;z-index:1;margin-bottom:28px;";
+	// Carousel horizontal — images rondes
+	const carouselWrap = document.createElement("div");
+	carouselWrap.style.cssText = "position:relative;z-index:1;width:100%;margin-bottom:28px;" +
+		"animation:slideInEnd 0.8s 0.6s both;";
+
+	const track = document.createElement("div");
+	track.style.cssText = "display:flex;flex-direction:row;align-items:center;" +
+		"gap:18px;overflow-x:auto;overflow-y:hidden;padding:16px 24px;" +
+		"scrollbar-width:none;-ms-overflow-style:none;" +
+		"scroll-snap-type:x mandatory;-webkit-overflow-scrolling:touch;";
+	track.style.setProperty("--webkit-scrollbar", "none");
+
+	// Cacher la scrollbar webkit
+	const hideScrollStyle = document.createElement("style");
+	hideScrollStyle.textContent = "#endOverlay .carousel-track::-webkit-scrollbar{display:none}";
+	overlay.appendChild(hideScrollStyle);
+	track.className = "carousel-track";
 
 	loadedImages.forEach(function(img, i) {
 		const card = document.createElement("div");
-		card.style.cssText = "width:100%;border-radius:18px;overflow:hidden;" +
-			"box-shadow:0 0 24px rgba(255,105,180,0.6);" +
-			"animation:slideInEnd 0.7s " + (0.4 + i*0.12) + "s both;";
+		const sz = "130px";
+		card.style.cssText = "flex-shrink:0;width:" + sz + ";height:" + sz + ";" +
+			"border-radius:50%;overflow:hidden;scroll-snap-align:center;" +
+			"border:3px solid #ff69b4;" +
+			"box-shadow:0 0 20px rgba(255,105,180,0.7),0 0 40px rgba(255,20,147,0.3);" +
+			"animation:heartPopEnd 0.5s " + (0.6 + i*0.08) + "s both cubic-bezier(0.34,1.56,0.64,1);";
 		const imgEl = document.createElement("img");
 		imgEl.src = img.src;
-		imgEl.style.cssText = "width:100%;height:auto;display:block;";
+		imgEl.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;";
 		imgEl.alt = "";
 		card.appendChild(imgEl);
-		col.appendChild(card);
+		track.appendChild(card);
 	});
-	overlay.appendChild(col);
+
+	carouselWrap.appendChild(track);
+	overlay.appendChild(carouselWrap);
+
+	// Flèches indicateurs de scroll
+	const hint = document.createElement("div");
+	hint.style.cssText = "text-align:center;color:rgba(255,182,193,0.7);font-size:0.85rem;" +
+		"margin-top:-10px;margin-bottom:12px;position:relative;z-index:1;letter-spacing:1px;";
+	hint.textContent = "← glisse pour voir toutes les photos →";
+	overlay.appendChild(hint);
 
 	// Message final
 	const msg = document.createElement("div");
