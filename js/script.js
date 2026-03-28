@@ -1681,12 +1681,14 @@ function beginFireworks() {
 		}, 500); // Delay nhỏ để đảm bảo DOM đã sẵn sàng
 	}
 
-	// ====== AVERTISSEMENT FINALE à 55 secondes ======
+	// ====== À 2min10s : avertissement finale ======
 	setTimeout(() => {
+		stopWishesLoop();
+		if (appNodes.wishesLayer) appNodes.wishesLayer.innerHTML = "";
 		showFinaleWarning();
-	}, 55000);
+	}, 130000);
 
-	// ====== SÉQUENCE FINALE après 1 minute ======
+	// ====== À 2min15s : grand barrage feux d'artifice ======
 	setTimeout(() => {
 		launchEpicFinale();
 	}, 135000); // 2 minutes 15 secondes
@@ -1716,6 +1718,35 @@ function showFinaleWarning() {
 		warn.style.transform = "translate(-50%,-50%) scale(1.3)";
 		setTimeout(() => warn.remove(), 500);
 	}, 4000);
+}
+
+// ============================================================
+//  DÉFILEMENT DES VŒUX VERS LE BAS à 35s
+// ============================================================
+function scrollWishesDown() {
+	const layer = appNodes.wishesLayer;
+	if (!layer) return;
+
+	// 1) Arrêter la création de nouveaux vœux
+	stopWishesLoop();
+
+	// 2) Ajouter un style CSS de défilement vers le bas sur tous les éléments actifs
+	const scrollStyle = document.createElement("style");
+	scrollStyle.id = "wishScrollDown";
+	scrollStyle.textContent =
+		"@keyframes wishScrollDown{" +
+		"from{transform:translateX(-50%) translateY(0);opacity:1}" +
+		"to{transform:translateX(-50%) translateY(120vh);opacity:0}}" +
+		".wish-wrapper,.wish-image-wrapper{" +
+		"animation:wishScrollDown 3s ease-in forwards!important;}";
+	document.head.appendChild(scrollStyle);
+
+	// 3) Après 3s (fin du défilement) : vider le layer
+	setTimeout(() => {
+		if (layer) layer.innerHTML = "";
+		const s = document.getElementById("wishScrollDown");
+		if (s) s.remove();
+	}, 3000);
 }
 
 // ============================================================
@@ -1755,14 +1786,144 @@ function launchEpicFinale() {
 			seqRandomFastShell();
 		}, 80);
 
-		// 4) Après 15 secondes total → afficher les photos en cœur
+		// 4) Après 15 secondes total → vœux défilants pendant 30s
 		setTimeout(() => {
 			clearInterval(finaleInterval2);
 			isFinalePhase = false;
 			imageBurstEnabled = false;
-			showHeartGalleryEnd();
+			// Arrêter les feux d'artifice
+			togglePause(true);
+			// Afficher les vœux défilants
+			showScrollingWishes();
+			// Après 30s → écran final
+			setTimeout(() => {
+				hideScrollingWishes();
+				showHeartGalleryEnd();
+			}, 30000);
 		}, 7000);
 	}, 8000);
+}
+
+// ============================================================
+//  VŒUX DÉFILANTS EN FRANÇAIS — 30 secondes
+// ============================================================
+const frenchWishes = [
+	"🎂 Joyeux anniversaire Latifa !",
+	"✨ Que tous tes rêves se réalisent cette année",
+	"💗 Tu mérites tout le bonheur du monde",
+	"🌸 Que cette journée soit inoubliable pour toi",
+	"🎉 On est tellement heureux de te célébrer !",
+	"💫 Que la vie te sourie chaque jour",
+	"🌟 Tu es une personne exceptionnelle, Latifa",
+	"🎁 Nous t'offrons tout notre amour en ce jour spécial",
+	"🥂 À ta santé, à ta joie, à ton avenir radieux !",
+	"🌺 Que le bonheur t'accompagne partout où tu vas",
+	"💝 Tu illumines la vie de tous ceux qui t'entourent",
+	"🎊 Que cette nouvelle année de ta vie soit magnifique",
+	"⭐ Tu brilles comme une étoile, ne l'oublie jamais",
+	"🫶 Avec tout notre amour, maintenant et toujours",
+	"🎀 Bonne fête Latifa, tu le mérites tellement !",
+	"🌙 Que chaque nuit te porte de beaux rêves",
+	"💐 Une pensée douce pour toi en ce grand jour",
+	"🎵 Que la vie soit une belle musique pour toi",
+	"🕊️ Paix, amour et bonheur pour toi Latifa",
+	"💖 On t'aime plus que les mots ne peuvent le dire"
+];
+
+let scrollWishesOverlay = null;
+
+function showScrollingWishes() {
+	const overlay = document.createElement("div");
+	overlay.id = "scrollWishesOverlay";
+	overlay.style.cssText =
+		"position:fixed;inset:0;z-index:9990;" +
+		"background:linear-gradient(180deg,#0d0020 0%,#160028 50%,#0d0020 100%);" +
+		"overflow:hidden;opacity:0;transition:opacity 1s ease;";
+
+	// Étoiles de fond
+	const stars = document.createElement("div");
+	stars.style.cssText = "position:absolute;inset:0;pointer-events:none;";
+	for (let i = 0; i < 50; i++) {
+		const s = document.createElement("div");
+		const sz = 1 + Math.random() * 2;
+		s.style.cssText = "position:absolute;border-radius:50%;background:#fff;" +
+			"left:" + (Math.random()*100) + "%;top:" + (Math.random()*100) + "%;" +
+			"width:" + sz + "px;height:" + sz + "px;opacity:" + (0.2+Math.random()*0.6) + ";";
+		stars.appendChild(s);
+	}
+	overlay.appendChild(stars);
+
+	// Titre fixe en haut
+	const header = document.createElement("div");
+	header.style.cssText =
+		"position:absolute;top:0;left:0;right:0;z-index:2;" +
+		"text-align:center;padding:20px 16px 10px;" +
+		"background:linear-gradient(180deg,#0d0020 70%,transparent);" +
+		"font-size:clamp(1.3rem,5vw,2rem);font-weight:900;color:#ff69b4;" +
+		"text-shadow:0 0 20px #ff1493,0 0 40px #ff69b4;font-family:Georgia,serif;letter-spacing:2px;";
+	header.textContent = "💗 Nos vœux pour toi Latifa 💗";
+	overlay.appendChild(header);
+
+	// Container du défilement
+	const track = document.createElement("div");
+	track.id = "wishTrack";
+	track.style.cssText =
+		"position:absolute;left:0;right:0;top:90px;" +
+		"display:flex;flex-direction:column;align-items:center;gap:0;";
+
+	// Créer les cartes de vœux (doublées pour boucle infinie)
+	const allWishes = [...frenchWishes, ...frenchWishes];
+	allWishes.forEach(function(wish) {
+		const card = document.createElement("div");
+		card.style.cssText =
+			"width:88%;max-width:400px;margin:10px 0;padding:16px 20px;" +
+			"background:rgba(255,105,180,0.08);border:1px solid rgba(255,105,180,0.3);" +
+			"border-radius:16px;color:#ffe4f0;" +
+			"font-size:clamp(1rem,3.5vw,1.2rem);line-height:1.5;text-align:center;" +
+			"text-shadow:0 0 10px rgba(255,105,180,0.5);" +
+			"box-shadow:0 0 15px rgba(255,20,147,0.15);";
+		card.textContent = wish;
+		track.appendChild(card);
+	});
+	overlay.appendChild(track);
+
+	// Gradient bas pour effet fondu
+	const fadeBottom = document.createElement("div");
+	fadeBottom.style.cssText =
+		"position:absolute;bottom:0;left:0;right:0;height:120px;pointer-events:none;" +
+		"background:linear-gradient(transparent,#0d0020);z-index:2;";
+	overlay.appendChild(fadeBottom);
+
+	document.body.appendChild(overlay);
+	scrollWishesOverlay = overlay;
+
+	// Fade in
+	requestAnimationFrame(() => {
+		requestAnimationFrame(() => { overlay.style.opacity = "1"; });
+	});
+
+	// Animation de défilement CSS automatique
+	const cardHeight = 72; // hauteur approx d'une carte + margin
+	const totalHeight = frenchWishes.length * cardHeight;
+	const scrollStyle = document.createElement("style");
+	scrollStyle.id = "scrollWishStyle";
+	scrollStyle.textContent =
+		"@keyframes autoScroll{" +
+		"from{transform:translateY(0)}" +
+		"to{transform:translateY(-" + totalHeight + "px)}}" +
+		"#wishTrack{animation:autoScroll 30s linear forwards;}";
+	document.head.appendChild(scrollStyle);
+}
+
+function hideScrollingWishes() {
+	if (scrollWishesOverlay) {
+		scrollWishesOverlay.style.opacity = "0";
+		setTimeout(() => {
+			if (scrollWishesOverlay) { scrollWishesOverlay.remove(); scrollWishesOverlay = null; }
+			const s = document.getElementById("scrollWishStyle");
+			if (s) s.remove();
+		}, 1000);
+	}
 }
 
 // ============================================================
@@ -1776,8 +1937,8 @@ function showHeartGalleryEnd() {
 	overlay.style.cssText =
 		"position:fixed;inset:0;z-index:9999;" +
 		"background:linear-gradient(180deg,#0d0020 0%,#1a0033 50%,#0d0020 100%);" +
-		"display:flex;flex-direction:column;align-items:center;" +
-		"overflow-y:auto;opacity:0;transition:opacity 1.2s ease;padding:30px 16px 40px;box-sizing:border-box;";
+		"display:flex;flex-direction:column;align-items:center;justify-content:flex-start;" +
+		"overflow-y:auto;opacity:0;transition:opacity 1.2s ease;padding:40px 16px 60px;box-sizing:border-box;";
 
 	// Keyframes
 	const style = document.createElement("style");
@@ -1900,6 +2061,70 @@ function showHeartGalleryEnd() {
 	requestAnimationFrame(function() {
 		requestAnimationFrame(function() { overlay.style.opacity = "1"; });
 	});
+
+	// ====== À +35s : scroll automatique des vœux vers le bas pendant 30s ======
+	setTimeout(function() {
+		startFinalScroll(overlay, track);
+	}, 35000);
+}
+
+// Défilement automatique du carousel vers la droite puis grande fin
+function startFinalScroll(overlay, track) {
+	// Scroll smooth du carousel vers la droite (toutes les photos)
+	const totalScroll = track.scrollWidth - track.clientWidth;
+	const duration = 30000; // 30 secondes
+	const startTime = performance.now();
+	const startScroll = track.scrollLeft;
+
+	function animateScroll(now) {
+		const elapsed = now - startTime;
+		const progress = Math.min(elapsed / duration, 1);
+		// Ease in-out
+		const ease = progress < 0.5
+			? 2 * progress * progress
+			: -1 + (4 - 2 * progress) * progress;
+		track.scrollLeft = startScroll + ease * totalScroll;
+		if (progress < 1) {
+			requestAnimationFrame(animateScroll);
+		} else {
+			// Fin du défilement → grande fin du spectacle
+			showGrandFinal(overlay);
+		}
+	}
+	requestAnimationFrame(animateScroll);
+}
+
+// Grande fin — fondu final et message ultime
+function showGrandFinal(overlay) {
+	// Ajouter un message ultime au bas
+	const grand = document.createElement("div");
+	grand.style.cssText = "margin-top:30px;text-align:center;position:relative;z-index:2;" +
+		"animation:slideInEnd 1s both;padding:0 20px 20px;";
+	grand.innerHTML =
+		"<div style='font-size:clamp(2rem,7vw,4rem);font-weight:900;color:#fff;" +
+		"text-shadow:0 0 40px #ff69b4,0 0 80px #ff1493;" +
+		"font-family:Georgia,serif;margin-bottom:12px;'>\uD83C\uDF89 FIN \uD83C\uDF89</div>" +
+		"<div style='font-size:clamp(1rem,3vw,1.4rem);color:#ffb6c1;line-height:1.9;" +
+		"text-shadow:0 0 10px rgba(255,105,180,0.6);'>" +
+		"Merci d\u2019avoir v\u00E9cu ce moment avec nous.<br>" +
+		"<strong style=\'color:#ffd700;\'>Bonne f\u00EAte Latifa \uD83D\uDC97</strong>" +
+		"</div>";
+	overlay.appendChild(grand);
+
+	// Scroll jusqu'en bas pour voir le message
+	setTimeout(function() {
+		overlay.scrollTo({ top: overlay.scrollHeight, behavior: "smooth" });
+	}, 300);
+
+	// Lancer des feux d'artifice finaux en arrière-plan
+	togglePause(false);
+	const burstInterval = setInterval(function() {
+		seqRandomFastShell();
+	}, 300);
+	setTimeout(function() {
+		clearInterval(burstInterval);
+		togglePause(true);
+	}, 6000);
 }
 function fitShellPositionInBoundsH(position) {
 	const edge = 0.18;
