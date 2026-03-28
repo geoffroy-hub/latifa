@@ -2001,6 +2001,25 @@ function showHeartGalleryEnd() {
 	subtitle.textContent = "LATIFA \uD83D\uDC97";
 	overlay.appendChild(subtitle);
 
+	// ====== Grande photo de Latifa au centre ======
+	const bigPhotoWrap = document.createElement("div");
+	bigPhotoWrap.style.cssText = "position:relative;z-index:1;margin-bottom:24px;" +
+		"animation:slideInEnd 0.7s 0.4s both;";
+
+	const bigPhoto = document.createElement("div");
+	const bigSz = Math.min(window.innerWidth * 0.72, 280) + "px";
+	bigPhoto.style.cssText = "width:" + bigSz + ";height:" + bigSz + ";border-radius:50%;overflow:hidden;margin:0 auto;" +
+		"border:4px solid #ff69b4;" +
+		"box-shadow:0 0 40px rgba(255,20,147,0.8),0 0 80px rgba(255,105,180,0.4);";
+	if (loadedImages.length > 0) {
+		const bigImg = document.createElement("img");
+		bigImg.src = loadedImages[0].src;
+		bigImg.style.cssText = "width:100%;height:100%;object-fit:cover;display:block;";
+		bigPhoto.appendChild(bigImg);
+	}
+	bigPhotoWrap.appendChild(bigPhoto);
+	overlay.appendChild(bigPhotoWrap);
+
 	// Carousel horizontal — images rondes
 	const carouselWrap = document.createElement("div");
 	carouselWrap.style.cssText = "position:relative;z-index:1;width:100%;margin-bottom:28px;" +
@@ -2056,6 +2075,25 @@ function showHeartGalleryEnd() {
 	msg.innerHTML = "\u2728 Que cette journ\u00E9e soit remplie de bonheur,<br>de joie et d'amour infini.<br>" +
 		"<strong style='color:#ff69b4;'>Nous t'aimons Latifa\u00A0! \uD83D\uDC97</strong>";
 	overlay.appendChild(msg);
+
+	// ====== Bouton Rejouer ======
+	const replayBtn = document.createElement("button");
+	replayBtn.style.cssText = "margin-top:28px;padding:14px 40px;border:none;border-radius:50px;" +
+		"background:linear-gradient(135deg,#ff1493,#ff69b4);color:#fff;font-size:1.1rem;" +
+		"font-weight:700;letter-spacing:2px;cursor:pointer;position:relative;z-index:1;" +
+		"box-shadow:0 0 20px rgba(255,20,147,0.6);animation:slideInEnd 1s 2s both;" +
+		"font-family:Georgia,serif;";
+	replayBtn.textContent = "\u21BA Rejouer";
+	replayBtn.addEventListener("click", function() {
+		location.reload();
+	});
+	replayBtn.addEventListener("touchstart", function() {
+		replayBtn.style.transform = "scale(0.95)";
+	});
+	replayBtn.addEventListener("touchend", function() {
+		replayBtn.style.transform = "scale(1)";
+	});
+	overlay.appendChild(replayBtn);
 
 	document.body.appendChild(overlay);
 	requestAnimationFrame(function() {
