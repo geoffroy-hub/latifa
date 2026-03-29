@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0C3320">
+  <title>403 — Accès refusé | Miralocks</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div class="error-page">
+    <div class="error-inner">
+      <div class="error-logo">
+        <picture>
+          <source srcset="assets/logo-transparent.webp" type="image/webp">
+          <img src="assets/logo-transparent.png" alt="Miralocks" width="48" height="48">
+        </picture>
+      </div>
+      <div class="error-icon-wrap"><i class="fas fa-lock"></i></div>
+      <div class="error-code">403</div>
+      <h1 class="error-title">Accès refusé</h1>
+      <p class="error-desc">Vous n'avez pas l'autorisation d'accéder à cette page.</p>
+      <div class="error-actions">
+        <a href="index.html" class="btn btn-or"><i class="fas fa-home"></i> Accueil</a>
+        <a href="javascript:history.back()" class="btn btn-outline-light"><i class="fas fa-arrow-left"></i> Retour</a>
+      </div>
+      <div class="error-links">
+        <a href="gallery.html">Galerie</a>
+        <a href="services.html">Services</a>
+        <a href="rendezvous.html">Réserver</a>
+        <a href="contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+  <script src="js/register-sw.js" defer></script>
+</body>
+
+</html>

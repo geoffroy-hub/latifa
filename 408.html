@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0C3320">
+  <title>408 — Délai dépassé | Miralocks</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div class="error-page">
+    <div class="error-inner">
+      <div class="error-logo">
+        <picture>
+          <source srcset="assets/logo-transparent.webp" type="image/webp">
+          <img src="assets/logo-transparent.png" alt="Miralocks" width="48" height="48">
+        </picture>
+      </div>
+      <div class="error-icon-wrap"><i class="fas fa-clock"></i></div>
+      <div class="error-code">408</div>
+      <h1 class="error-title">Délai de connexion dépassé</h1>
+      <p class="error-desc">La requête a pris trop de temps. Vérifiez votre connexion et réessayez.</p>
+      <div class="error-actions">
+        <button onclick="window.location.reload()" class="btn btn-or"><i class="fas fa-redo"></i> Réessayer</button>
+        <a href="index.html" class="btn btn-outline-light"><i class="fas fa-home"></i> Accueil</a>
+      </div>
+    </div>
+  </div>
+  <script src="js/register-sw.js" defer></script>
+</body>
+
+</html>

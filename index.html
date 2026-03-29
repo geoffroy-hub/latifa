@@ -1,1025 +1,704 @@
 <!DOCTYPE html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>🎂 Joyeux Anniversaire Latifa 🎂</title>
-		<meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1, maximum-scale=5" />
-		<meta name="mobile-web-app-capable" content="yes" />
-		<meta name="apple-mobile-web-app-capable" content="yes" />
-		<meta name="theme-color" content="#ff69b4" />
-
-		<!-- ====== Open Graph / WhatsApp Preview ====== -->
-		<meta property="og:type" content="website" />
-		<meta property="og:url" content="https://latifa-aniv.vercel.app" />
-		<meta property="og:title" content="🎂 Joyeux Anniversaire Latifa 🎂" />
-		<meta property="og:description" content="✨ Un jour très spécial pour toi, Latifa ! Avec tout notre amour et nos vœux les plus sincères. 🌸💗" />
-		<meta property="og:image" content="https://latifa-aniv.vercel.app/images/og-image.png" />
-		<meta property="og:image:width" content="1200" />
-		<meta property="og:image:height" content="630" />
-		<meta property="og:image:alt" content="Joyeux Anniversaire Latifa" />
-
-		<!-- Twitter Card (bonus) -->
-		<meta name="twitter:card" content="summary_large_image" />
-		<meta name="twitter:title" content="🎂 Joyeux Anniversaire Latifa 🎂" />
-		<meta name="twitter:description" content="✨ Un jour très spécial pour toi, Latifa !" />
-		<meta name="twitter:image" content="https://latifa-aniv.vercel.app/images/og-image.png" />
-		<!-- ============================================ -->
-
-		<link rel="shortcut icon" type="image/png" href="images/og-image.png" />
-		<link rel="icon" type="image/png" href="images/og-image.png" />
-		<link rel="apple-touch-icon-precomposed" href="images/og-image.png" />
-		<!-- Thư viện CSS Clip Path Helper -->
-		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/clippy.js/1.0.0/clippy.min.css" />
-		<style>
-			/* Khu vực demo ảnh dùng clip-path (tròn + trái tim) */
-			.shape-gallery {
-				display: flex;
-				gap: 24px;
-				justify-content: center;
-				align-items: center;
-				padding: 16px;
-			}
-			.shape-card {
-				width: 240px;
-				height: 240px;
-				position: relative;
-			}
-			.shape-card img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				display: block;
-			}
-			/* Ảnh tròn */
-			.shape-circle img {
-				border-radius: 50%;
-			}
-			/* Ảnh trái tim */
-			.shape-heart img {
-				clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z");
-				-webkit-clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z");
-			}
-			/* Fallback mask cho trình duyệt cũ */
-			@supports not (clip-path: path("M 120 224 C 8 144 0 72 60 40 C 96 24 120 40 120 56 C 120 40 144 24 180 40 C 240 72 232 144 120 224 Z")) {
-				.shape-heart img {
-					mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
-					-webkit-mask-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 240 240"><path d="M120 224 C8 144 0 72 60 40 C96 24 120 40 120 56 C120 40 144 24 180 40 C240 72 232 144 120 224 Z" fill="white"/></svg>');
-					mask-size: contain;
-					-webkit-mask-size: contain;
-					mask-repeat: no-repeat;
-					-webkit-mask-repeat: no-repeat;
-				}
-			}
-
-			/* Layer chứa lời chúc bay trên nền pháo hoa */
-			.wishes-layer {
-				position: absolute;
-				inset: 0;
-				z-index: 10; /* Hiển thị trên canvas */
-				pointer-events: auto; /* Cho phép nhận pointer events để xoay không gian */
-				transform-origin: center center;
-				transform-style: preserve-3d; /* Cho phép 3D transform */
-				will-change: transform; /* Tối ưu performance */
-			}
-
-			/* Tắt transition khi đang drag để giảm lag */
-			.wishes-layer.dragging {
-				transition: none;
-			}
-
-			/* Wrapper anim bay lên (dùng transform riêng) */
-			.wish-wrapper {
-				position: absolute;
-				bottom: -3rem;
-				/* Pas de left:50% + translateX(-50%) qui déborde — JS gère le left */
-				transform: translateX(-50%) translateY(0);
-				opacity: 0;
-				pointer-events: none;
-			}
-
-			/* Câu chúc màu hồng phát sáng, có thể xoay / thu phóng bằng tay */
-			.wish-text {
-				display: inline-block;
-				font-size: 1.1rem;
-				padding: 0.4rem 1rem;
-				border-radius: 999px;
-				color: #ff9ad9;
-				text-shadow:
-					0 0 6px rgba(255, 105, 180, 0.9),
-					0 0 18px rgba(255, 20, 147, 0.8);
-				background: rgba(0, 0, 0, 0.3);
-				border: 1px solid rgba(255, 192, 203, 0.7);
-				box-shadow:
-					0 0 14px rgba(255, 105, 180, 0.7),
-					0 0 32px rgba(255, 20, 147, 0.4);
-				white-space: nowrap;
-				max-width: 80vw;
-				white-space: normal;
-				word-break: break-word;
-				transform-origin: center center;
-				pointer-events: auto;
-			}
-
-			/* Responsive pour mobile */
-			@media (max-width: 768px) {
-				.wish-text {
-					font-size: 0.95rem;
-					padding: 0.4rem 1rem;
-					max-width: 76vw;
-					line-height: 1.5;
-				}
-			}
-
-			@media (max-width: 480px) {
-				.wish-text {
-					font-size: 0.85rem;
-					padding: 0.35rem 0.85rem;
-					max-width: 72vw;
-					line-height: 1.4;
-				}
-			}
-
-			/* Bay chậm đều từ dưới lên trên */
-			@keyframes wishFloatUp {
-				0% {
-					opacity: 0;
-					transform: translateX(-50%) translateY(10vh);
-				}
-				10% {
-					opacity: 1;
-				}
-				75% {
-					opacity: 1;
-				}
-				100% {
-					opacity: 0;
-					transform: translateX(-50%) translateY(-110vh);
-				}
-			}
-
-			.wish-animate {
-				animation: wishFloatUp 4s linear forwards;
-			}
-
-			/* Ảnh bay lên cùng câu chúc */
-			.wish-image {
-				display: inline-block;
-				/* Ratio 3:4 portrait */
-				width: clamp(160px, 36vw, 270px);
-				height: clamp(213px, 48vw, 360px);
-				object-fit: cover;
-				border-radius: 16px;
-				border: 4px solid rgba(255, 192, 203, 1);
-				box-shadow:
-					0 0 30px rgba(255, 105, 180, 1),
-					0 0 60px rgba(255, 20, 147, 0.8),
-					0 0 90px rgba(255, 20, 147, 0.5),
-					inset 0 0 30px rgba(255, 192, 203, 0.4);
-				transform-origin: center center;
-				pointer-events: auto;
-				animation: imageGlow 2s ease-in-out infinite alternate;
-			}
-
-			/* Mode portrait */
-			@media (orientation: portrait) {
-				.wish-image {
-					width: clamp(180px, 52vw, 300px);
-					height: clamp(240px, 69vw, 400px);
-				}
-			}
-
-			/* Petit écran portrait */
-			@media (orientation: portrait) and (max-width: 400px) {
-				.wish-image {
-					width: clamp(150px, 46vw, 220px);
-					height: clamp(200px, 61vw, 293px);
-				}
-			}
-
-			/* Hiệu ứng phát sáng cho ảnh */
-			@keyframes imageGlow {
-				0% {
-					box-shadow:
-						0 0 20px rgba(255, 105, 180, 0.8),
-						0 0 40px rgba(255, 20, 147, 0.6),
-						0 0 60px rgba(255, 20, 147, 0.4),
-						inset 0 0 20px rgba(255, 192, 203, 0.3);
-					border-color: rgba(255, 192, 203, 0.9);
-				}
-				100% {
-					box-shadow:
-						0 0 30px rgba(255, 105, 180, 1),
-						0 0 60px rgba(255, 20, 147, 0.9),
-						0 0 90px rgba(255, 20, 147, 0.7),
-						inset 0 0 30px rgba(255, 192, 203, 0.5);
-					border-color: rgba(255, 255, 255, 1);
-				}
-			}
-
-			/* Wrapper pour images volantes */
-			.wish-image-wrapper {
-				position: absolute;
-				bottom: -3rem;
-				transform: translateX(-50%) translateY(0);
-				opacity: 0;
-				pointer-events: none;
-			}
-
-			/* Ẩn nút pause và nút cài đặt */
-			.pause-btn,
-			.settings-btn {
-				display: none !important;
-			}
-
-			/* Đảm bảo các nút điều khiển vẫn có thể click được */
-			.controls {
-				pointer-events: auto !important;
-				position: relative;
-				z-index: 20;
-			}
-
-			/* Đảm bảo menu vẫn có thể click được */
-			.menu {
-				pointer-events: auto !important;
-				position: relative;
-				z-index: 20;
-			}
-
-			/* ===== BEAUTIFUL MOBILE START SCREEN ===== */
-			.start-button-container {
-				background: radial-gradient(ellipse at center, #1a0020 0%, #0d0010 50%, #000 100%) !important;
-				overflow: hidden;
-			}
-
-			.start-content {
-				position: relative;
-				z-index: 2;
-				display: flex;
-				flex-direction: column;
-				align-items: center;
-				gap: 2.5rem;
-				padding: 2rem 1.5rem;
-				text-align: center;
-			}
-
-			.start-title-neon {
-				font-family: 'Fredoka One', cursive;
-				font-size: clamp(2.2rem, 11vw, 4.5rem);
-				line-height: 1.25;
-				color: #ff9ad9;
-				text-shadow:
-					0 0 10px rgba(255, 105, 180, 1),
-					0 0 30px rgba(255, 20, 147, 0.9),
-					0 0 60px rgba(255, 20, 147, 0.7),
-					0 0 100px rgba(255, 20, 147, 0.5),
-					4px 4px 0 rgba(255, 107, 157, 0.4);
-				animation: neonPulse 2s ease-in-out infinite alternate;
-			}
-
-			@keyframes neonPulse {
-				from {
-					text-shadow:
-						0 0 10px rgba(255, 105, 180, 1),
-						0 0 30px rgba(255, 20, 147, 0.9),
-						0 0 60px rgba(255, 20, 147, 0.6),
-						0 0 100px rgba(255, 20, 147, 0.4);
-				}
-				to {
-					text-shadow:
-						0 0 20px rgba(255, 105, 180, 1),
-						0 0 50px rgba(255, 20, 147, 1),
-						0 0 90px rgba(255, 20, 147, 0.8),
-						0 0 140px rgba(255, 20, 147, 0.6),
-						0 0 200px rgba(255, 20, 147, 0.4);
-				}
-			}
-
-			.start-button {
-				font-size: clamp(1.2rem, 5vw, 2rem) !important;
-				padding: 1rem 3rem !important;
-				border-radius: 999px !important;
-				animation: buttonGlow 1.5s ease-in-out infinite alternate;
-				letter-spacing: 3px !important;
-			}
-
-			@keyframes buttonGlow {
-				from { box-shadow: 0 0 14px rgba(255,105,180,0.7), 0 0 32px rgba(255,20,147,0.4); }
-				to   { box-shadow: 0 0 28px rgba(255,105,180,1),   0 0 60px rgba(255,20,147,0.8), 0 0 100px rgba(255,20,147,0.4); }
-			}
-
-			.start-subtitle {
-				font-family: 'Dancing Script', cursive;
-				font-size: clamp(1rem, 4vw, 1.4rem);
-				color: rgba(255, 192, 203, 0.7);
-				letter-spacing: 1px;
-				animation: fadeInOut 3s ease-in-out infinite;
-			}
-
-			@keyframes fadeInOut {
-				0%, 100% { opacity: 0.4; }
-				50% { opacity: 1; }
-			}
-
-			/* Intro overlay */
-			.intro-overlay {
-				position: fixed;
-				inset: 0;
-				background: rgba(0, 0, 0, 0.85);
-				z-index: 1000;
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				opacity: 1;
-				transition: opacity 0.5s ease-out;
-				overflow: hidden;
-			}
-
-			.intro-overlay .intro-text {
-			    /* 1. Reset ukuran kotak agar pas dengan layar */
-			    width: 100%;
-			    max-width: 100vw;
-			    box-sizing: border-box; /* PENTING: Biar padding gak bikin kotak melebar ke kanan */
-			    padding: 0 0.5rem; /* Kasih jarak aman 1rem di kiri dan kanan */
-
-			    /* 2. Ukuran font dinamis (Magic-nya di sini) */
-			    /* Artinya: Minimal ukuran 1.5rem, idealnya 10% dari lebar layar, maksimal 5rem */
-			    font-size: clamp(2rem, 10vw, 5rem); 
-
-			    /* 3. Posisi dan Teks */
-			    text-align: center;
-			    white-space: pre-line; /* Tetap pertahankan ini untuk membaca \n dari JS */
-			    word-wrap: normal;
-			    word-break: keep-all;
-
-			    /* Biarkan efek text-shadow kamu yang lama di bawah sini */
-			    font-family: 'Fredoka One', cursive !important;
-			    font-weight: 400;
-			    color: #ff9ad9;
-			    text-shadow:
-			        4px 4px 0 rgba(255, 107, 157, 0.8),
-			        8px 8px 0 rgba(196, 69, 105, 0.6),
-			        12px 12px 15px rgba(0, 0, 0, 0.5),
-			        0 0 15px rgba(255, 105, 180, 1),
-			        0 0 40px rgba(255, 20, 147, 0.9),
-			        0 0 70px rgba(255, 20, 147, 0.8),
-			        0 0 100px rgba(255, 20, 147, 0.6),
-			        0 0 150px rgba(255, 20, 147, 0.4),
-			        0 0 200px rgba(255, 20, 147, 0.3);
-			}
-
-			.intro-overlay.hide {
-				opacity: 0;
-				pointer-events: none;
-			}
-
-			/* Nút Start */
-			.start-button-container {
-				position: fixed;
-				top: 0;
-				left: 0;
-				width: 100%;
-				height: 100%;
-				background: rgba(0, 0, 0, 0.85);
-				display: flex;
-				align-items: center;
-				justify-content: center;
-				z-index: 1001;
-				transition: opacity 0.5s ease-out;
-			}
-
-			.start-button-container.hide {
-				opacity: 0;
-				pointer-events: none;
-			}
-
-			.start-button {
-				display: inline-block;
-				font-family: 'Fredoka One', cursive !important;
-				font-size: 3rem;
-				font-weight: 400;
-				padding: 1.5rem 4rem;
-				border-radius: 999px;
-				color: #ff9ad9;
-				text-shadow:
-					0 0 6px rgba(255, 105, 180, 0.9),
-					0 0 18px rgba(255, 20, 147, 0.8);
-				background: rgba(0, 0, 0, 0.3);
-				border: 1px solid rgba(255, 192, 203, 0.7);
-				box-shadow:
-					0 0 14px rgba(255, 105, 180, 0.7),
-					0 0 32px rgba(255, 20, 147, 0.4);
-				cursor: pointer;
-				transition: all 0.3s ease;
-				text-transform: uppercase;
-				letter-spacing: 2px;
-			}
-
-			.start-button:hover {
-				transform: scale(1.05);
-				border-color: rgba(255, 192, 203, 1);
-				box-shadow:
-					0 0 20px rgba(255, 105, 180, 0.9),
-					0 0 40px rgba(255, 20, 147, 0.6);
-			}
-
-			.start-button:active {
-				transform: scale(0.95);
-			}
-
-			/* Intro text - chỉ phát sáng chữ, không có viền khung */
-			.intro-text {
-				display: inline-block;
-				font-family: 'Fredoka One', cursive !important;
-				font-size: 5rem;
-				font-weight: 400;
-				padding: 1.5rem 3rem;
-				color: #ff9ad9;
-				text-shadow:
-					4px 4px 0 rgba(255, 107, 157, 0.8),
-					8px 8px 0 rgba(196, 69, 105, 0.6),
-					12px 12px 15px rgba(0, 0, 0, 0.5),
-					0 0 15px rgba(255, 105, 180, 1),
-					0 0 40px rgba(255, 20, 147, 0.9),
-					0 0 70px rgba(255, 20, 147, 0.8),
-					0 0 100px rgba(255, 20, 147, 0.6),
-					0 0 150px rgba(255, 20, 147, 0.4),
-					0 0 200px rgba(255, 20, 147, 0.3);
-				background: transparent;
-				border: none;
-				box-shadow: none;
-				transform-origin: center center;
-				letter-spacing: 4px;
-				/* text-transform: uppercase; */
-				text-align: center;
-				width: 100%;
-			}
-
-			/* Số đếm ngược */
-			.intro-countdown {
-				font-family: 'Fredoka One', cursive !important;
-				font-size: 10rem;
-				font-weight: 100;
-				letter-spacing: 4px;
-			}
-
-			/* Animation cho intro - đơn giản, tinh tế với phát sáng tỏa rộng */
-			@keyframes introAppear {
-				0% {
-					transform: scale(1.5);
-					opacity: 0;
-					text-shadow:
-						0 0 5px rgba(255, 105, 180, 0.5),
-						0 0 10px rgba(255, 20, 147, 0.4);
-				}
-				20% {
-					transform: scale(1);
-					opacity: 1;
-					text-shadow:
-						0 0 15px rgba(255, 105, 180, 1),
-						0 0 40px rgba(255, 20, 147, 0.9),
-						0 0 70px rgba(255, 20, 147, 0.8),
-						0 0 100px rgba(255, 20, 147, 0.6),
-						0 0 150px rgba(255, 20, 147, 0.4),
-						0 0 200px rgba(255, 20, 147, 0.3);
-				}
-				50% {
-					text-shadow:
-						0 0 20px rgba(255, 105, 180, 1),
-						
-				}
-				80%, 100% {
-					transform: scale(1);
-					opacity: 1;
-				}
-			}
-
-			.intro-text.animate-appear {
-				animation: introAppear 1s ease-out forwards;
-			}
-
-			/* Animation riêng cho HAPPY NEW YEAR - hiệu ứng in-out đẹp */
-			@keyframes happyNewYearIn {
-				0% {
-					transform: scale(0.3) translateY(50px);
-					opacity: 0;
-					filter: blur(10px);
-					text-shadow:
-						0 0 5px rgba(255, 105, 180, 0.3),
-						0 0 10px rgba(255, 20, 147, 0.2);
-				}
-				50% {
-					transform: scale(1.1) translateY(-10px);
-					opacity: 0.9;
-					filter: blur(2px);
-					text-shadow:
-						0 0 20px rgba(255, 105, 180, 0.9),
-						0 0 50px rgba(255, 20, 147, 0.8),
-						0 0 90px rgba(255, 20, 147, 0.6);
-				}
-				100% {
-					transform: scale(1) translateY(0);
-					opacity: 1;
-					filter: blur(0);
-					text-shadow:
-						0 0 15px rgba(255, 105, 180, 1),
-						0 0 40px rgba(255, 20, 147, 0.9),
-						0 0 70px rgba(255, 20, 147, 0.8),
-						0 0 100px rgba(255, 20, 147, 0.6),
-						0 0 150px rgba(255, 20, 147, 0.4),
-						0 0 200px rgba(255, 20, 147, 0.3);
-				}
-			}
-
-			@keyframes happyNewYearOut {
-				0% {
-					transform: scale(1) translateY(0);
-					opacity: 1;
-					filter: blur(0);
-				}
-				20% {
-					transform: scale(1.1) translateY(-10px);
-					opacity: 1;
-					filter: blur(0);
-				}
-				40% {
-					transform: scale(1.3) translateY(-20px);
-					opacity: 0.9;
-					filter: blur(1px);
-				}
-				60% {
-					transform: scale(1.8) translateY(-40px);
-					opacity: 0.7;
-					filter: blur(2px);
-				}
-				80% {
-					transform: scale(2.5) translateY(-60px);
-					opacity: 0.4;
-					filter: blur(4px);
-				}
-				100% {
-					transform: scale(4) translateY(-100px);
-					opacity: 0;
-					filter: blur(8px);
-				}
-			}
-
-			/* Class riêng cho HAPPY NEW YEAR */
-			.intro-text.happy-new-year.animate-appear {
-				animation: happyNewYearIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
-			}
-
-			.intro-text.happy-new-year.fade-out {
-				animation: happyNewYearOut 2.5s ease-out forwards;
-				transform-origin: center center;
-			}
-
-			/* Responsive cho intro */
-			@media (max-width: 768px) {
-				.intro-text {
-					font-size: 5rem;
-					padding: 1rem 1.5rem;
-					letter-spacing: 2px;
-					text-align: center;
-				}
-
-				.intro-countdown {
-					font-size: 8rem;
-					letter-spacing: 2px;
-				}
-
-				.start-button {
-					font-size: 2rem;
-					padding: 1rem 2.5rem;
-				}
-			}
-
-			@media (max-width: 480px) {
-				.intro-text {
-					font-size: 3.5rem;
-					padding: 0.8rem 1rem;
-					letter-spacing: 1px;
-					text-align: center;
-				}
-
-				.intro-countdown {
-					font-size: 6rem;
-					letter-spacing: 1px;
-				}
-
-				.start-button {
-					font-size: 1.5rem;
-					padding: 0.8rem 2rem;
-				}
-			}
-			#orientation-lock {
-  		    display: none !important;
-  		}
-
-			/* Mode portrait sur mobile */
-			@media (orientation: portrait) and (max-width: 768px) {
-				.start-button {
-					font-size: 1.8rem;
-					padding: 1rem 2.5rem;
-				}
-				.intro-text {
-					font-size: clamp(2.5rem, 12vw, 5rem);
-					padding: 0.8rem 1rem;
-				}
-				.intro-countdown {
-					font-size: clamp(4rem, 20vw, 8rem);
-				}
-				.wish-text {
-					font-size: 0.85rem;
-					max-width: 90vw;
-					white-space: normal;
-					word-break: break-word;
-				}
-				.stop-wishes-text-btn {
-					font-size: 0.9rem;
-					padding: 0.5rem 1.2rem;
-					bottom: 8%;
-				}
-			}
-
-		/* Styling Tombol Stop Wishes (Teks Transparan & Posisi Bawah Tengah) */
-		.stop-wishes-text-btn {
-		    position: fixed;
-		    bottom: 12%; /* Jarak dari bawah, agak ke atas sedikit */
-		    left: 50%;
-		    transform: translateX(-50%); /* Agar persis di tengah secara horizontal */
-		    font-family: 'Fredoka One', cursive !important;
-		    font-size: 1.2rem;
-		    padding: 0.8rem 2rem;
-		    border-radius: 999px;
-		
-		    /* Warna teks dan background transparan */
-		    color: rgba(255, 154, 217, 0.8); 
-		    background: rgba(0, 0, 0, 0.4); 
-		    border: 1px solid rgba(255, 192, 203, 0.4);
-		    box-shadow: 0 0 10px rgba(255, 105, 180, 0.2);
-		
-		    /* Efek blur ala glassmorphism biar estetik */
-		    backdrop-filter: blur(4px);
-		    -webkit-backdrop-filter: blur(4px);
-		
-		    cursor: pointer;
-		    z-index: 100; /* Pastikan tombol selalu bisa di-klik di atas kanvas */
-		    transition: all 0.3s ease;
-		    text-transform: uppercase;
-		    letter-spacing: 2px;
-		}
-
-		/* Efek saat kursor menyentuh tombol (Hover) */
-		.stop-wishes-text-btn:hover {
-		    background: rgba(0, 0, 0, 0.6);
-		    color: #ff9ad9;
-		    border-color: rgba(255, 192, 203, 0.8);
-		    box-shadow: 0 0 15px rgba(255, 105, 180, 0.6);
-		    transform: translateX(-50%) scale(1.05); /* Membesar sedikit, tapi tetap di tengah */
-		}
-
-		/* Efek saat tombol diklik (Active) */
-		.stop-wishes-text-btn:active {
-		    transform: translateX(-50%) scale(0.95);
-		}
-
-		/* Penyesuaian ukuran untuk layar HP */
-		@media (max-width: 768px) {
-		    .stop-wishes-text-btn {
-		        font-size: 1rem;
-		        padding: 0.6rem 1.5rem;
-		        bottom: 10%; 
-		    }
-		}
-		</style>
-
-		<meta name="msapplication-TileImage" content="./ok.png" />
-		<link href="fonts/css.css" rel="stylesheet" />
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;500;600;700&display=swap" rel="stylesheet" />
-		<link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
-		<link rel="stylesheet" href="css/style.css" />
-	</head>
-	<body>
-		<!-- Landscape Instruction -->
-		<div class="overlay">
-			<div id="orientation-lock">
-        	    <div class="phone-icon">
-        	        <img src="images/screen.png" alt="">
-        	    </div>
-        	</div>
-		</div>
-		<!-- partial:index.partial.html -->
-		<!-- SVG Spritesheet -->
-		<div style="height: 0; width: 0; position: absolute; visibility: hidden">
-			<svg xmlns="http://www.w3.org/2000/svg">
-				<symbol id="icon-play" viewBox="0 0 24 24">
-					<path d="M8 5v14l11-7z" />
-				</symbol>
-				<symbol id="icon-pause" viewBox="0 0 24 24">
-					<path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z" />
-				</symbol>
-				<symbol id="icon-close" viewBox="0 0 24 24">
-					<path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z" />
-				</symbol>
-				<symbol id="icon-settings" viewBox="0 0 24 24">
-					<path d="M19.43 12.98c.04-.32.07-.64.07-.98s-.03-.66-.07-.98l2.11-1.65c.19-.15.24-.42.12-.64l-2-3.46c-.12-.22-.39-.3-.61-.22l-2.49 1c-.52-.4-1.08-.73-1.69-.98l-.38-2.65C14.46 2.18 14.25 2 14 2h-4c-.25 0-.46.18-.49.42l-.38 2.65c-.61.25-1.17.59-1.69.98l-2.49-1c-.23-.09-.49 0-.61.22l-2 3.46c-.13.22-.07.49.12.64l2.11 1.65c-.04.32-.07.65-.07.98s.03.66.07.98l-2.11 1.65c-.19.15-.24.42-.12.64l2 3.46c.12.22.39.3.61.22l2.49-1c.52.4 1.08.73 1.69.98l.38 2.65c.03.24.24.42.49.42h4c.25 0 .46-.18.49-.42l.38-2.65c.61-.25 1.17-.59 1.69-.98l2.49 1c.23.09.49 0 .61-.22l2-3.46c.12-.22.07-.49-.12-.64l-2.11-1.65zM12 15.5c-1.93 0-3.5-1.57-3.5-3.5s1.57-3.5 3.5-3.5 3.5 1.57 3.5 3.5-1.57 3.5-3.5 3.5z" />
-				</symbol>
-				<symbol id="icon-sound-on" viewBox="0 0 24 24">
-					<path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z" />
-				</symbol>
-				<symbol id="icon-sound-off" viewBox="0 0 24 24">
-					<path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z" />
-				</symbol>
-				<symbol id="icon-stop-wishes" viewBox="0 0 24 24">
-					<path d="M6 6h12v12H6z" />
-				</symbol>
-			</svg>
-		</div>
-		<!-- Intro Overlay -->
-		<!-- Nút Start -->
-		<div class="start-button-container" id="startButtonContainer">
-			<canvas id="particle-canvas" style="position:absolute;inset:0;width:100%;height:100%;pointer-events:none;"></canvas>
-			<div class="start-content">
-				<div class="start-title-neon">Happy 17th<br>Birthday<br>Latifa 💗</div>
-				<button class="start-button" id="startButton">✨ START ✨</button>
-				<div class="start-subtitle">Tap to celebrate with us</div>
-			</div>
-		</div>
-
-		<div class="intro-overlay" id="introOverlay">
-			<div class="intro-text" id="introText">3</div>
-		</div>
-
-		<!-- App -->
-		<div class="container">
-			<div class="stage-container remove">
-				<div class="canvas-container">
-					<canvas id="trails-canvas"> </canvas>
-					<canvas id="main-canvas"> </canvas>
-				</div>
-				<!-- Layer lời chúc bay trên trời -->
-				<div class="wishes-layer" id="wishes-layer"></div>
-				<div class="controls">
-					<div class="btn pause-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-pause" xlink:href="#icon-pause"></use>
-						</svg>
-					</div>
-					<div class="btn sound-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-sound-off" xlink:href="#icon-sound-off"></use>
-						</svg>
-					</div>
-					<!-- <div class="btn stop-wishes-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-stop-wishes" xlink:href="#icon-stop-wishes"></use>
-						</svg>
-					</div> -->
-					<div class="btn settings-btn">
-						<svg fill="white" width="24" height="24">
-							<use href="#icon-settings" xlink:href="#icon-settings"></use>
-						</svg>
-					</div>
-				</div>
-
-				<button class="stop-wishes-btn stop-wishes-text-btn">CLOSE</button>
-
-				<div class="menu hide">
-					<div class="menu__inner-wrap">
-						<div class="btn btn--bright close-menu-btn">
-							<svg fill="white" width="24" height="24">
-								<use href="#icon-close" xlink:href="#icon-close"></use>
-							</svg>
-						</div>
-						<div class="menu__header">Cài đặt</div>
-						<div class="menu__subheader">Để biết thêm thông tin hãy nhấp vào bất kỳ nhãn nào</div>
-						<form>
-							<div class="form-option form-option--select">
-								<label class="shell-type-label"> Loại pháo hoa </label>
-								<select class="shell-type"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="shell-size-label"> Kích thước pháo hoa </label>
-								<select class="shell-size"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="quality-ui-label"> Chất lượng hiển thị </label>
-								<select class="quality-ui"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="sky-lighting-label"> Độ sáng bầu trời </label>
-								<select class="sky-lighting"></select>
-							</div>
-							<div class="form-option form-option--select">
-								<label class="scaleFactor-label"> Thu phóng </label>
-								<select class="scaleFactor"></select>
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="word-shell-label"> Pháo hoa chữ </label>
-								<input class="word-shell" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="auto-launch-label"> Tự động bắn pháo </label>
-								<input class="auto-launch" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox form-option--finale-mode">
-								<label class="finale-mode-label"> Bắn nhiều pháo hoa cùng lúc </label>
-								<input class="finale-mode" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="hide-controls-label"> Ẩn nút điều khiển </label>
-								<input class="hide-controls" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox form-option--fullscreen">
-								<label class="fullscreen-label"> Toàn màn hình </label>
-								<input class="fullscreen" type="checkbox" />
-							</div>
-							<div class="form-option form-option--checkbox">
-								<label class="long-exposure-label"> Giữ vệt sáng pháo hoa </label>
-								<input class="long-exposure" type="checkbox" />
-							</div>
-						</form>
-						<div class="credits">
-							<p class="copyright">
-								<script>
-									var mydate = new Date();
-									document.writeln("Copyright&nbsp;&copy;&nbsp;2021 - " + mydate.getFullYear() + '&nbsp;<a target="_blank" href="https://www.nianbroken.top/">碎念_Nian</a><br />All&nbsp;Rights&nbsp;Reserved');
-								</script>
-							</p>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="help-modal">
-				<div class="help-modal__overlay"></div>
-				<div class="help-modal__dialog">
-					<div class="help-modal__header"></div>
-					<div class="help-modal__body"></div>
-					<button type="button" class="help-modal__close-btn">Đóng</button>
-				</div>
-			</div>
-		</div>
-		<script>
-			// --- Logika untuk menyembunyikan tombol HIDE WISHES setelah diklik ---
-            const stopWishesBtn = document.querySelector('.stop-wishes-text-btn');
-            
-            if (stopWishesBtn) {
-                stopWishesBtn.addEventListener('click', function() {
-                    // Kode ini membuat tombol menghilang secara perlahan
-                    this.style.opacity = '0';
-                    this.style.pointerEvents = 'none';
-                    
-                    // (Opsional) Hapus sepenuhnya dari dokumen setelah animasinya selesai
-                    setTimeout(() => {
-                        this.style.display = 'none';
-                    }, 300);
-                });
-            }
-            // --- Orientation: toutes orientations autorisées (portrait ET paysage) ---
-            let isLandscape = true;
-            function checkOrientation() {
-                const orientationLock = document.getElementById('orientation-lock');
-                const mainCanvas = document.querySelector('.canvas-container');
-
-                // Toujours cacher le verrou d'orientation et afficher le site
-                if(orientationLock) orientationLock.style.display = 'none';
-                if(mainCanvas) mainCanvas.style.display = 'block';
-                if(typeof startWebsite === 'function') startWebsite();
-
-                // Redimensionner lors du changement d'orientation
-                window.addEventListener('orientationchange', () => {
-                    setTimeout(() => {
-                        if(typeof forceResizeMatrix === 'function') forceResizeMatrix();
-                        window.dispatchEvent(new Event('resize'));
-                    }, 200);
-                });
-
-                window.addEventListener('resize', () => {
-                    setTimeout(() => {
-                        if(typeof forceResizeMatrix === 'function') forceResizeMatrix();
-                    }, 100);
-                });
-            }
-
-            // --- Particules flottantes sur l'écran de démarrage ---
-            (function() {
-                const canvas = document.getElementById('particle-canvas');
-                if (!canvas) return;
-                const ctx = canvas.getContext('2d');
-                let particles = [];
-                function resize() {
-                    canvas.width = canvas.offsetWidth;
-                    canvas.height = canvas.offsetHeight;
-                }
-                resize();
-                window.addEventListener('resize', resize);
-
-                const hearts = ['💗','💖','✨','🌸','💕','⭐','🎀'];
-                for (let i = 0; i < 35; i++) {
-                    particles.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        size: 10 + Math.random() * 18,
-                        speedX: (Math.random() - 0.5) * 0.6,
-                        speedY: -0.3 - Math.random() * 0.7,
-                        opacity: 0.2 + Math.random() * 0.6,
-                        symbol: hearts[Math.floor(Math.random() * hearts.length)],
-                        wobble: Math.random() * Math.PI * 2,
-                        wobbleSpeed: 0.02 + Math.random() * 0.03,
-                    });
-                }
-
-                function animateParticles() {
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-                    particles.forEach(p => {
-                        p.wobble += p.wobbleSpeed;
-                        p.x += p.speedX + Math.sin(p.wobble) * 0.4;
-                        p.y += p.speedY;
-                        if (p.y < -30) {
-                            p.y = canvas.height + 10;
-                            p.x = Math.random() * canvas.width;
-                        }
-                        ctx.globalAlpha = p.opacity;
-                        ctx.font = p.size + 'px serif';
-                        ctx.fillText(p.symbol, p.x, p.y);
-                    });
-                    ctx.globalAlpha = 1;
-                    requestAnimationFrame(animateParticles);
-                }
-                animateParticles();
-            })();
-
-            // --- Setup Audio & Tombol Start ---
-            const bgMusic = new Audio('music/music.mp3');
-            bgMusic.loop = true; // Musik diulang terus menerus
-            let isPlaying = false;
-
-            const startBtnContainer = document.getElementById('startButtonContainer');
-            const startBtn = document.getElementById('startButton');
-
-            if (startBtn) {
-                startBtn.addEventListener('click', () => {
-                    // 1. Sembunyikan container tombol start
-                    startBtnContainer.classList.add('hide');
-
-                    // 2. Mainkan musik
-                    if (!isPlaying) {
-                        bgMusic.play().then(() => {
-                            isPlaying = true;
-                            // Ubah icon sound di pojok (jika ada) menjadi mode ON
-                            const soundIcon = document.querySelector('.sound-btn use');
-                            if (soundIcon) {
-                                soundIcon.setAttribute('href', '#icon-sound-on');
-                                soundIcon.setAttribute('xlink:href', '#icon-sound-on');
-                            }
-                        }).catch(error => {
-                            console.log("Browser memblokir autoplay audio:", error);
-                        });
-                    }
-
-                    // Catatan: Pastikan animasi intro text (3, 2, 1) di-trigger dari js/script.js 
-                    // atau berjalan otomatis setelah startBtnContainer disembunyikan.
-                });
-            }
-
-            // --- Toggle Play/Pause Musik dari Tombol Pengaturan ---
-            const soundBtn = document.querySelector('.sound-btn');
-            if (soundBtn) {
-                soundBtn.addEventListener('click', () => {
-                    const soundIcon = soundBtn.querySelector('use');
-                    if (isPlaying) {
-                        bgMusic.pause();
-                        isPlaying = false;
-                        soundIcon.setAttribute('href', '#icon-sound-off');
-                        soundIcon.setAttribute('xlink:href', '#icon-sound-off');
-                    } else {
-                        bgMusic.play();
-                        isPlaying = true;
-                        soundIcon.setAttribute('href', '#icon-sound-on');
-                        soundIcon.setAttribute('xlink:href', '#icon-sound-on');
-                    }
-                });
-            }
-        </script>
-		<script src="detect-devtools.js"></script>
-		<script type='text/javascript'>
-			  // Bypass for developers
-			  const keyName = 'key';
-			  const keyValue = '9ac7ec230e0e4513578f309d6d3579ad';
-	  
-			  // Handle via config
-			  DisableDevtool({
-				  tkName: keyName,
-				  md5: keyValue,
-				  interval: '100',
-			  });
-		  </script>
-		<!-- partial -->
-		<script src="js/fscreen.js"></script>
-		<script src="js/Stage.js"></script>
-		<script src="js/MyMath.js"></script>
-		<script src="js/script.js"></script>
-	</body>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0C3320">
+  <title>Miralocks | Spécialiste Locks à Lomé, Togo</title>
+  <meta name="description"
+    content="Miralocks, spécialiste en création, entretien et transformation de dreadlocks à Lomé, Togo. Beauté naturelle, expertise et passion.">
+  <meta name="robots" content="index, follow">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://mira-locks.vercel.app/">
+  <meta property="og:locale" content="fr_TG">
+  <meta name="geo.region" content="TG">
+  <meta name="geo.placename" content="Lomé, Togo">
+  <meta name="geo.position" content="6.2243452;1.19342">
+  <meta name="ICBM" content="6.2243452, 1.19342">
+
+  <!-- PERFORMANCE: preconnect uniquement aux domaines critiques -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <!-- Supabase en dns-prefetch seulement (pas critique au rendu) -->
+  <link rel="dns-prefetch" href="https://mqityrifhiaarwdcacxo.supabase.co">
+  <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+
+  <!-- PERFORMANCE: CSS critique inline pour éviter le FOUC -->
+  <style id="critical-css">
+    /* Anti-flash thème */
+    html{visibility:hidden}html.fonts-loaded,html[data-theme]{visibility:visible}
+    /* Layout critique above-the-fold */
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+    :root{--vert:#0C3320;--or:#C9A84C;--blanc:#FAFAF8;--noir:#0A0A0A;--rayon:12px;--transition:.25s cubic-bezier(.4,0,.2,1);--safe-top:env(safe-area-inset-top,0px)}
+    [data-theme="dark"]{--vert:#061a10;--noir:#FAFAF8;--blanc:#121212}
+    body{font-family:'Outfit',system-ui,sans-serif;background:var(--blanc);color:var(--noir);overflow-x:hidden;padding-top:var(--safe-top);-webkit-font-smoothing:antialiased}
+    /* Nav */
+    .nav{position:fixed;top:0;left:0;right:0;z-index:1000;display:flex;align-items:center;justify-content:space-between;padding:.8rem 1.5rem;background:rgba(12,51,32,.95);backdrop-filter:blur(10px);height:64px}
+    /* Loader */
+    #page-loader{position:fixed;inset:0;background:var(--vert);display:flex;align-items:center;justify-content:center;z-index:9999;transition:opacity .4s}
+    #page-loader.hidden{opacity:0;pointer-events:none}
+    .loader-logo{width:60px;height:60px;border:3px solid rgba(201,168,76,.3);border-top-color:var(--or);border-radius:50%;animation:spin .8s linear infinite}
+    @keyframes spin{to{transform:rotate(360deg)}}
+    /* Hero */
+    .hero{min-height:100svh;background:var(--vert);display:flex;align-items:center;justify-content:center;padding:6rem 1.5rem 3rem;position:relative}
+    /* Skip link */
+    .skip-link{position:absolute;top:-100%;left:1rem;background:var(--or);color:#000;padding:.5rem 1rem;border-radius:4px;font-weight:600;z-index:10000;transition:top .2s}
+    .skip-link:focus{top:.5rem}
+  </style>
+
+  <!-- PERFORMANCE: Fonts non-bloquantes avec font-display:swap -->
+  <link rel="preload"
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap"
+    as="style" onload="this.onload=null;this.rel='stylesheet';document.documentElement.classList.add('fonts-loaded')">
+  <noscript>
+    <link rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=Playfair+Display:wght@400;700;900&display=swap">
+  </noscript>
+
+  <!-- PERFORMANCE: Font Awesome en defer (non-bloquant) -->
+  <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" as="style"
+    onload="this.onload=null;this.rel='stylesheet'" crossorigin="anonymous">
+  <noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      crossorigin="anonymous">
+  </noscript>
+
+  <!-- CSS principal -->
+  <link rel="stylesheet" href="css/styles.css" media="print" onload="this.media='all'">
+  <noscript><link rel="stylesheet" href="css/styles.css"></noscript>
+
+  <!-- Favicons -->
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Miralocks">
+
+  <!-- PERFORMANCE: Thème anti-flash (synchrone, minimal) -->
+  <script>
+    (function(){var t=localStorage.getItem('Miralocks_theme')||'light';document.documentElement.dataset.theme=t;})();
+  </script>
+
+  <!-- SEO meta (defer — non critique au rendu) -->
+  <script src="js/seo-meta.js" defer></script>
+
+  <!-- Schema.org JSON-LD -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "HairSalon",
+      "name": "Institut Miralocks",
+      "image": "https://mira-locks.vercel.app/assets/logo-vert.png",
+      "@id": "https://mira-locks.vercel.app",
+      "url": "https://mira-locks.vercel.app",
+      "telephone": "+22897989001",
+      "priceRange": "$$",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "Agoè Cacaveli, près école La Source",
+        "addressLocality": "Lomé",
+        "addressCountry": "TG"
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"],
+          "opens": "08:00",
+          "closes": "18:00"
+        }
+      ],
+      "aggregateRating": {
+        "@type": "AggregateRating",
+        "ratingValue": "4.8",
+        "bestRating": "5",
+        "worstRating": "1",
+        "ratingCount": "9"
+      },
+      "sameAs": [
+        "https://www.instagram.com/institut_Miralocks",
+        "https://www.facebook.com/mira.lachocote",
+        "https://www.tiktok.com/@institut_mira_locks228"
+      ]
+    }
+  </script>
+
+  <!-- OG Image -->
+  <meta property="og:image" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:secure_url" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Miralocks — Spécialiste locks à Lomé, Togo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+
+  <!-- PERFORMANCE: Preload LCP image (première image de la galerie) -->
+  <link rel="preload" as="image" href="images/locks1.webp" type="image/webp" fetchpriority="high">
+
+  <!-- PERFORMANCE: Forcer font-display:swap sur Font Awesome (CDN ne le fait pas) -->
+  <style>
+    @font-face {
+      font-family: 'Font Awesome 6 Free';
+      font-display: swap;
+    }
+    @font-face {
+      font-family: 'Font Awesome 6 Brands';
+      font-display: swap;
+    }
+  </style>
+
+  <!-- Google Translate — masquer la barre et les éléments parasites -->
+  <style>
+    body{top:0!important;position:static!important}
+    .goog-te-banner-frame,.goog-te-balloon-frame,
+    #goog-gt-tt,.goog-tooltip,.goog-tooltip:hover,
+    #google_translate_element,.VIpgJd-ZVi9od-aZ2wEe-wOHMyf{display:none!important}
+    .goog-text-highlight{background:none!important;box-shadow:none!important}
+    .skiptranslate:not(#google_translate_element){display:none!important}
+  </style>
+</head>
+
+<body>
+  <!-- ACCESSIBILITÉ: Skip link -->
+  <a href="#main" class="skip-link">Aller au contenu principal</a>
+
+  <div id="page-loader" role="status" aria-label="Chargement en cours" aria-live="polite">
+    <div class="loader-logo" aria-hidden="true"></div>
+  </div>
+
+  <!-- ACCESSIBILITÉ: landmark nav avec aria-label descriptif -->
+  <nav class="nav" role="navigation" aria-label="Navigation principale">
+    <a href="index.html" class="nav-logo" aria-label="Miralocks — Retour à l'accueil">
+      <picture>
+        <source srcset="assets/logo-transparent.avif" type="image/avif">
+        <source srcset="assets/logo-transparent.webp" type="image/webp">
+        <img src="assets/logo-transparent.png" alt="" width="40" height="40" loading="eager"
+          fetchpriority="high" aria-hidden="true">
+      </picture>
+      <span>Miralocks</span>
+    </a>
+    <!-- ACCESSIBILITÉ: id correspondant à aria-controls du hamburger -->
+    <ul class="nav-links" id="nav-links" aria-label="Menu principal">
+      <li><a href="index.html" aria-current="page">Accueil</a></li>
+      <li><a href="gallery.html">Galerie</a></li>
+      <li><a href="avant-apres.html">Avant/Après</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="faq.html">FAQ</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="about.html">À propos</a></li>
+      <li><a href="avis.html">Avis</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="rendezvous.html" class="btn btn-or nav-cta">Réserver</a></li>
+    </ul>
+    <div class="nav-actions">
+      <!-- ACCESSIBILITÉ: label explicite sur boutons d'action -->
+      <button class="lang-selector" aria-label="Changer la langue — actuellement Français" type="button">
+        <span class="lang-current" aria-hidden="true">FR</span>
+        <span class="lang-arrow" aria-hidden="true">⌄</span>
+      </button>
+      <button id="theme-toggle" class="theme-toggle" aria-label="Activer le mode sombre" type="button">
+        <i class="fas fa-moon" aria-hidden="true"></i>
+      </button>
+      <span class="nav-divider" aria-hidden="true"></span>
+      <button class="hamburger" aria-label="Ouvrir le menu de navigation" aria-expanded="false"
+        aria-controls="nav-links" type="button">
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+        <span aria-hidden="true"></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero" id="main" aria-labelledby="hero-title">
+    <div class="hero-content">
+      <span class="hero-badge fade-in">✦ Spécialiste Locks à Lomé</span>
+      <h1 id="hero-title" class="fade-in fade-in-delay-1">
+        Sublimez vos locks<br>avec <em>Miralocks</em>
+      </h1>
+      <p class="fade-in fade-in-delay-2">
+        Création, entretien, coloration et soin de vos dreadlocks à Lomé. Expertise africaine, résultats exceptionnels.
+      </p>
+      <div class="hero-btns fade-in fade-in-delay-3">
+        <a href="rendezvous.html" class="btn btn-or">
+          <i class="fas fa-calendar-alt" aria-hidden="true"></i> Prendre RDV
+        </a>
+        <a href="gallery.html" class="btn btn-blanc">
+          <i class="fas fa-images" aria-hidden="true"></i> Voir la galerie
+        </a>
+      </div>
+    </div>
+    <div class="hero-scroll" aria-hidden="true">
+      <i class="fas fa-chevron-down"></i>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="stats" aria-labelledby="stats-title">
+    <h2 id="stats-title" class="sr-only">Nos chiffres clés</h2>
+    <div class="stat-item">
+      <div class="stat-number" data-target="500" data-suffix="+" aria-label="Plus de 500 clients satisfaits">500+</div>
+      <div class="stat-label" aria-hidden="true">Clients satisfaits</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="5" data-suffix=" ans" aria-label="5 ans d'expertise">5 ans</div>
+      <div class="stat-label" aria-hidden="true">D'expertise</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="98" data-suffix="%" aria-label="98 pourcent de satisfaction">98%</div>
+      <div class="stat-label" aria-hidden="true">Satisfaction</div>
+    </div>
+    <div class="stat-item">
+      <div class="stat-number" data-target="12" data-suffix="" aria-label="12 services proposés">12</div>
+      <div class="stat-label" aria-hidden="true">Services proposés</div>
+    </div>
+  </section>
+
+  <!-- GALERIE APERÇU -->
+  <section class="section" aria-labelledby="gallery-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 id="gallery-title" class="fade-in">Nos Créations</h2>
+        <div class="divider" aria-hidden="true"></div>
+        <p class="fade-in">Découvrez quelques réalisations de notre équipe passionnée</p>
+      </div>
+      <div class="gallery-grid" id="gallery-grid-home" role="list">
+        <!-- PERFORMANCE: 1ère image eager+fetchpriority (LCP) -->
+        <div class="gallery-item fade-in" role="listitem">
+          <picture>
+            <source srcset="images/locks1.webp" type="image/webp">
+            <img src="images/locks1.jpg" alt="Création de locks style crochet instantané — Miralocks Lomé"
+              loading="eager" decoding="sync" width="400" height="533" fetchpriority="high" class="card-img">
+          </picture>
+          <div class="gallery-overlay" aria-hidden="true"><span class="gallery-overlay-text">Voir en grand</span></div>
+        </div>
+        <div class="gallery-item fade-in" role="listitem">
+          <picture>
+            <source srcset="images/locks2.webp" type="image/webp">
+            <img src="images/locks2.jpg" alt="Sisterlocks réalisées par Miralocks à Lomé, Togo"
+              loading="lazy" decoding="async" width="400" height="533" class="card-img">
+          </picture>
+          <div class="gallery-overlay" aria-hidden="true"><span class="gallery-overlay-text">Voir en grand</span></div>
+        </div>
+        <div class="gallery-item fade-in" role="listitem">
+          <picture>
+            <source srcset="images/locks3.webp" type="image/webp">
+            <img src="images/locks3.jpg" alt="Dreadlocks entretenues et resserrées — Miralocks"
+              loading="lazy" decoding="async" width="400" height="533" class="card-img">
+          </picture>
+          <div class="gallery-overlay" aria-hidden="true"><span class="gallery-overlay-text">Voir en grand</span></div>
+        </div>
+        <div class="gallery-item fade-in" role="listitem">
+          <picture>
+            <source srcset="images/locks4.webp" type="image/webp">
+            <img src="images/locks4.jpg" alt="Locks micro réalisées par nos expertes à Lomé"
+              loading="lazy" decoding="async" width="400" height="533" class="card-img">
+          </picture>
+          <div class="gallery-overlay" aria-hidden="true"><span class="gallery-overlay-text">Voir en grand</span></div>
+        </div>
+        <div class="gallery-item fade-in" role="listitem">
+          <picture>
+            <source srcset="images/locks5.webp" type="image/webp">
+            <img src="images/locks5.jpg" alt="Coloration de locks naturelles — Institut Miralocks"
+              loading="lazy" decoding="async" width="400" height="533" class="card-img">
+          </picture>
+          <div class="gallery-overlay" aria-hidden="true"><span class="gallery-overlay-text">Voir en grand</span></div>
+        </div>
+        <div class="gallery-item fade-in" role="listitem">
+          <picture>
+            <source srcset="images/locks6.webp" type="image/webp">
+            <img src="images/locks6.jpg" alt="Création locks départ twist moyen — Miralocks Togo"
+              loading="lazy" decoding="async" width="400" height="533" class="card-img">
+          </picture>
+          <div class="gallery-overlay" aria-hidden="true"><span class="gallery-overlay-text">Voir en grand</span></div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <a href="gallery.html" class="btn btn-vert">Voir toute la galerie <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVANT / APRÈS -->
+  <section class="before-after-section" aria-labelledby="ba-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 id="ba-title" class="fade-in">Avant / Après</h2>
+        <div class="divider" aria-hidden="true"></div>
+        <p class="fade-in">Glissez le curseur pour voir la transformation</p>
+      </div>
+      <div class="ba-grid">
+        <div class="ba-item" aria-label="Comparaison avant et après transformation 1">
+          <div class="ba-images">
+            <picture>
+              <source srcset="images/avant1.webp" type="image/webp">
+              <img class="ba-before" src="images/avant1.jpg"
+                alt="Avant : cheveux naturels sans locks" loading="lazy" decoding="async" width="400" height="500">
+            </picture>
+            <picture>
+              <source srcset="images/apres1.webp" type="image/webp">
+              <img class="ba-after" src="images/apres1.jpg"
+                alt="Après : locks créées par Miralocks" loading="lazy" decoding="async" width="400" height="500">
+            </picture>
+          </div>
+          <div class="ba-divider" aria-hidden="true"></div>
+          <div class="ba-handle" aria-hidden="true">⟺</div>
+          <div class="ba-labels" aria-hidden="true">
+            <span class="ba-label ba-label-before">AVANT</span>
+            <span class="ba-label ba-label-after">APRÈS ✨</span>
+          </div>
+        </div>
+        <div class="ba-item" aria-label="Comparaison avant et après transformation 2">
+          <div class="ba-images">
+            <picture>
+              <source srcset="images/avant2.webp" type="image/webp">
+              <img class="ba-before" src="images/avant2.jpg"
+                alt="Avant : cheveux naturels sans locks" loading="lazy" decoding="async" width="400" height="500">
+            </picture>
+            <picture>
+              <source srcset="images/apres2.webp" type="image/webp">
+              <img class="ba-after" src="images/apres2.jpg"
+                alt="Après : transformation locks Miralocks" loading="lazy" decoding="async" width="400" height="500">
+            </picture>
+          </div>
+          <div class="ba-divider" aria-hidden="true"></div>
+          <div class="ba-handle" aria-hidden="true">⟺</div>
+          <div class="ba-labels" aria-hidden="true">
+            <span class="ba-label ba-label-before">AVANT</span>
+            <span class="ba-label ba-label-after">APRÈS ✨</span>
+          </div>
+        </div>
+        <div class="ba-item" aria-label="Comparaison avant et après transformation 3">
+          <div class="ba-images">
+            <picture>
+              <source srcset="images/avant3.webp" type="image/webp">
+              <img class="ba-before" src="images/avant3.jpg"
+                alt="Avant : cheveux naturels avant création de locks" loading="lazy" decoding="async" width="400" height="500">
+            </picture>
+            <picture>
+              <source srcset="images/apres3.webp" type="image/webp">
+              <img class="ba-after" src="images/apres3.jpg"
+                alt="Après : locks parfaites réalisées à Miralocks" loading="lazy" decoding="async" width="400" height="500">
+            </picture>
+          </div>
+          <div class="ba-divider" aria-hidden="true"></div>
+          <div class="ba-handle" aria-hidden="true">⟺</div>
+          <div class="ba-labels" aria-hidden="true">
+            <span class="ba-label ba-label-before">AVANT</span>
+            <span class="ba-label ba-label-after">APRÈS ✨</span>
+          </div>
+        </div>
+        <div class="ba-item" aria-label="Comparaison avant et après transformation 4">
+          <div class="ba-images">
+            <picture>
+              <source srcset="images/avant4.webp" type="image/webp">
+              <img class="ba-before" src="images/avant4.jpg"
+                alt="Avant : cheveux naturels non coiffés" loading="lazy" decoding="async" width="400" height="533">
+            </picture>
+            <picture>
+              <source srcset="images/apres4.webp" type="image/webp">
+              <img class="ba-after" src="images/apres4.jpg"
+                alt="Après : coiffure locks soignée Miralocks" loading="lazy" decoding="async" width="400" height="533">
+            </picture>
+          </div>
+          <div class="ba-divider" aria-hidden="true"></div>
+          <div class="ba-handle" aria-hidden="true">⟺</div>
+          <div class="ba-labels" aria-hidden="true">
+            <span class="ba-label ba-label-before">AVANT</span>
+            <span class="ba-label ba-label-after">APRÈS ✨</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICES APERÇU -->
+  <section class="section" aria-labelledby="services-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 id="services-title" class="fade-in">Nos Services</h2>
+        <div class="divider" aria-hidden="true"></div>
+        <p class="fade-in">Des prestations adaptées à tous types de locks</p>
+      </div>
+      <div class="services-grid">
+        <div class="service-card fade-in">
+          <div class="service-header">
+            <div class="service-icon" aria-hidden="true">🌿</div>
+            <h3>Création de Locks</h3>
+          </div>
+          <div class="service-body">
+            <div class="service-row"><span class="service-name">Crochet Instantané (moyen)</span><span class="service-price">25 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Crochet Instantané (mid)</span><span class="service-price">35 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Crochet Instantané (micro)</span><span class="service-price">60 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Départ Twist (moyen)</span><span class="service-price">20 000 FCFA</span></div>
+          </div>
+        </div>
+        <div class="service-card fade-in fade-in-delay-1">
+          <div class="service-header">
+            <div class="service-icon" aria-hidden="true">💆</div>
+            <h3>Soins &amp; Entretien</h3>
+          </div>
+          <div class="service-body">
+            <div class="service-row"><span class="service-name">Shampooing locks</span><span class="service-price">2 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Shampooing + Massage</span><span class="service-price">4 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Shamp + Massage + Vapeur</span><span class="service-price">5 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Resserrage standard (moyen)</span><span class="service-price">8 000 FCFA</span></div>
+          </div>
+        </div>
+        <div class="service-card fade-in fade-in-delay-2">
+          <div class="service-header">
+            <div class="service-icon" aria-hidden="true">✨</div>
+            <h3>Services Premium</h3>
+          </div>
+          <div class="service-body">
+            <div class="service-row"><span class="service-name">Interlocking Sisterlocks (moyen)</span><span class="service-price">50 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Teinture partielle</span><span class="service-price">dès 5 000 FCFA</span></div>
+            <div class="service-row"><span class="service-name">Défaire locks</span><span class="service-price">dès 15 000 FCFA</span></div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <a href="services.html" class="btn btn-vert">Voir tous les tarifs <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- AVIS -->
+  <section class="section section-alt" aria-labelledby="avis-title">
+    <div class="container">
+      <div class="section-header">
+        <h2 id="avis-title" class="fade-in">Ce que disent nos clientes</h2>
+        <div class="divider" aria-hidden="true"></div>
+      </div>
+      <div class="avis-grid">
+        <article class="avis-card fade-in">
+          <div class="avis-stars" aria-label="Note : 5 étoiles sur 5" role="img">★★★★★</div>
+          <p class="avis-text">« Akossiwa est une vraie artiste ! Mes locks sont parfaites, le soin est remarquable et
+            l'accueil chaleureux. Je recommande vivement ! »</p>
+          <div class="avis-author">
+            <div class="avis-avatar" aria-hidden="true">A</div>
+            <div>
+              <div class="avis-name">Afi K.</div>
+              <div class="avis-date">Lomé, Togo</div>
+            </div>
+          </div>
+        </article>
+        <article class="avis-card fade-in fade-in-delay-1">
+          <div class="avis-stars" aria-label="Note : 5 étoiles sur 5" role="img">★★★★★</div>
+          <p class="avis-text">« Meilleur salon locks de Lomé, sans hésitation. Personnel compétent, résultats
+            impeccables, tarifs corrects. »</p>
+          <div class="avis-author">
+            <div class="avis-avatar" aria-hidden="true">K</div>
+            <div>
+              <div class="avis-name">Kossiwa D.</div>
+              <div class="avis-date">Lomé, Togo</div>
+            </div>
+          </div>
+        </article>
+        <article class="avis-card fade-in fade-in-delay-2">
+          <div class="avis-stars" aria-label="Note : 5 étoiles sur 5" role="img">★★★★★</div>
+          <p class="avis-text">« J'ai fait mes Sisterlocks ici il y a 6 mois. Suivi excellent et résultats qui dépassent
+            mes attentes. Merci Miralocks ! »</p>
+          <div class="avis-author">
+            <div class="avis-avatar" aria-hidden="true">M</div>
+            <div>
+              <div class="avis-name">Mawuli A.</div>
+              <div class="avis-date">Lomé, Togo</div>
+            </div>
+          </div>
+        </article>
+      </div>
+      <div style="text-align:center;margin-top:2.5rem">
+        <a href="avis.html" class="btn btn-vert">Tous les avis <i class="fas fa-arrow-right" aria-hidden="true"></i></a>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA RDV -->
+  <section style="background:var(--vert);padding:5rem 1.5rem;text-align:center" aria-labelledby="cta-title">
+    <h2 id="cta-title" class="fade-in" style="color:var(--or);font-size:clamp(1.8rem,4vw,2.8rem);margin-bottom:1rem">
+      Prête à transformer vos locks ?
+    </h2>
+    <p class="fade-in" style="color:rgba(250,250,248,.8);max-width:500px;margin:0 auto 2rem;font-size:1.05rem">
+      Réservez votre consultation dès maintenant et confiez vos cheveux à notre équipe d'expertes.
+    </p>
+    <div class="fade-in" style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap">
+      <a href="rendezvous.html" class="btn btn-or"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Réserver en ligne</a>
+      <a href="https://wa.me/22897989001" class="btn btn-whatsapp" target="_blank" rel="noopener noreferrer">
+        <i class="fab fa-whatsapp" aria-hidden="true"></i> WhatsApp
+        <span class="sr-only">(ouvre dans un nouvel onglet)</span>
+      </a>
+    </div>
+  </section>
+
+  <!-- LIGHTBOX -->
+  <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Visionneuse de photos" aria-hidden="true">
+    <button class="lightbox-close" aria-label="Fermer la visionneuse" type="button">
+      <i class="fas fa-times" aria-hidden="true"></i>
+    </button>
+    <button class="lightbox-prev" aria-label="Photo précédente" type="button">
+      <i class="fas fa-chevron-left" aria-hidden="true"></i>
+    </button>
+    <img class="lightbox-img" src="" alt="" loading="lazy">
+    <button class="lightbox-next" aria-label="Photo suivante" type="button">
+      <i class="fas fa-chevron-right" aria-hidden="true"></i>
+    </button>
+  </div>
+
+  <!-- Bouton WhatsApp flottant -->
+  <a href="https://wa.me/22897989001" class="whatsapp-float" aria-label="Contacter Miralocks sur WhatsApp"
+    target="_blank" rel="noopener noreferrer">
+    <i class="fab fa-whatsapp" aria-hidden="true"></i>
+    <span class="sr-only">(ouvre dans un nouvel onglet)</span>
+  </a>
+
+  <!-- Cookie banner -->
+  <div class="cookie-banner" role="dialog" aria-label="Consentement aux cookies" aria-live="polite">
+    <p class="cookie-text">Nous utilisons des cookies pour améliorer votre expérience.
+      <a href="confidentialite.html">En savoir plus</a>
+    </p>
+    <div class="cookie-btns">
+      <button class="btn btn-or cookie-accept" type="button">Accepter</button>
+      <button class="btn btn-vert cookie-refuse" type="button">Refuser</button>
+    </div>
+  </div>
+
+  <footer class="footer" role="contentinfo">
+    <div class="footer-grid">
+      <div>
+        <div class="footer-logo">
+          <picture>
+            <source srcset="assets/logo-or.avif" type="image/avif">
+            <source srcset="assets/logo-or.webp" type="image/webp">
+            <img src="assets/logo-or.png" alt="Logo Miralocks" width="120" height="120" loading="lazy"
+              style="filter:none;width:120px;height:auto">
+          </picture>
+        </div>
+        <p class="footer-desc">Spécialiste des locks à Lomé, Togo. Expertise, passion et bienveillance pour sublimer vos cheveux naturels.</p>
+        <nav class="footer-socials" style="margin-top:1.25rem" aria-label="Réseaux sociaux">
+          <a href="https://www.instagram.com/institut_Miralocks" target="_blank" rel="noopener noreferrer"
+            class="social-btn instagram" aria-label="Suivre Miralocks sur Instagram (nouvel onglet)">
+            <i class="fab fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.facebook.com/mira.lachocote" target="_blank" rel="noopener noreferrer"
+            class="social-btn facebook" aria-label="Suivre Miralocks sur Facebook (nouvel onglet)">
+            <i class="fab fa-facebook-f" aria-hidden="true"></i>
+          </a>
+          <a href="https://www.tiktok.com/@institut_mira_locks228" target="_blank" rel="noopener noreferrer"
+            class="social-btn tiktok" aria-label="Suivre Miralocks sur TikTok (nouvel onglet)">
+            <i class="fab fa-tiktok" aria-hidden="true"></i>
+          </a>
+          <a href="https://wa.me/22897989001" target="_blank" rel="noopener noreferrer"
+            class="social-btn whatsapp" aria-label="Contacter Miralocks sur WhatsApp (nouvel onglet)">
+            <i class="fab fa-whatsapp" aria-hidden="true"></i>
+          </a>
+        </nav>
+      </div>
+      <div>
+        <h3 class="footer-heading">Navigation</h3>
+        <ul class="footer-links">
+          <li><a href="gallery.html">Galerie</a></li>
+          <li><a href="avant-apres.html">Avant / Après</a></li>
+          <li><a href="services.html">Services &amp; Tarifs</a></li>
+          <li><a href="faq.html">FAQ</a></li>
+          <li><a href="blog.html">Blog</a></li>
+          <li><a href="about.html">À propos</a></li>
+          <li><a href="avis.html">Témoignages</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-heading">Horaires</h3>
+        <ul class="footer-links">
+          <li>Mardi – Vendredi : 08h00–18h00</li>
+          <li>Samedi : 08h00–18h00</li>
+          <li style="color:rgba(201,168,76,.85);margin-top:.5rem">Fermé Dimanche &amp; Lundi</li>
+        </ul>
+      </div>
+      <div>
+        <h3 class="footer-heading">Contact</h3>
+        <ul class="footer-links">
+          <li>
+            <i class="fas fa-phone" style="color:var(--or);width:18px" aria-hidden="true"></i>
+            <a href="tel:+22897989001" style="color:inherit;text-decoration:none">+228 97 98 90 01</a>
+          </li>
+          <li>
+            <i class="fas fa-map-marker-alt" style="color:var(--or);width:18px" aria-hidden="true"></i>
+            <span>Agoè Cacaveli, Lomé</span>
+          </li>
+          <li style="margin-top:1rem">
+            <a href="rendezvous.html" class="btn btn-or">Prendre RDV</a>
+          </li>
+        </ul>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Miralocks — Tous droits réservés</span>
+      <nav aria-label="Liens légaux" style="display:flex;gap:1.5rem;flex-wrap:wrap">
+        <a href="mentions-legales.html">Mentions légales</a>
+        <a href="confidentialite.html">Confidentialité</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ACCESSIBILITÉ: sr-only style -->
+  <style>.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}</style>
+
+  <!-- PERFORMANCE: Supabase chargé en lazy via IntersectionObserver -->
+  <script>
+    (function() {
+      var loaded = false;
+      function loadSupabase() {
+        if (loaded) return;
+        loaded = true;
+        var s = document.createElement('script');
+        s.src = 'js/supabase.js';
+        s.onload = function() {
+          (async function() {
+            try {
+              if (typeof sb === 'undefined') return;
+              var photos = await sb.galerie.list(true);
+              if (!photos || !photos.length) return;
+              var grid = document.getElementById('gallery-grid-home');
+              if (!grid) return;
+              photos.slice(0, 6).forEach(function(p) {
+                var div = document.createElement('div');
+                div.className = 'gallery-item fade-in visible';
+                div.setAttribute('role', 'listitem');
+                var img = document.createElement('img');
+                img.src = p.photo_url;
+                img.alt = p.titre ? p.titre + ' — Miralocks' : 'Création locks Miralocks Lomé';
+                img.loading = 'lazy'; img.decoding = 'async';
+                img.width = 400; img.height = 533; img.className = 'card-img';
+                var overlay = document.createElement('div');
+                overlay.className = 'gallery-overlay';
+                overlay.setAttribute('aria-hidden', 'true');
+                overlay.innerHTML = '<span class="gallery-overlay-text">Voir en grand</span>';
+                div.appendChild(img); div.appendChild(overlay); grid.appendChild(div);
+              });
+            } catch(e) {}
+          })();
+        };
+        document.head.appendChild(s);
+      }
+      // Déclencher quand la galerie entre dans le viewport (200px avant)
+      var grid = document.getElementById('gallery-grid-home');
+      if (grid && 'IntersectionObserver' in window) {
+        var io = new IntersectionObserver(function(entries) {
+          if (entries[0].isIntersecting) { loadSupabase(); io.disconnect(); }
+        }, { rootMargin: '200px' });
+        io.observe(grid);
+      } else {
+        setTimeout(loadSupabase, 3000);
+      }
+    })();
+  </script>
+  <script src="js/main.js" defer></script>
+  <script src="js/register-sw.js" defer></script>
+  <script src="js/lang.js" defer></script>
+</body>
 </html>

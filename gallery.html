@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0C3320">
+    <title>Galerie Photos | Miralocks Lomé</title>
+    <meta name="description"
+        content="Galerie photos de créations, entretiens et transformations de locks à Miralocks de Lomé, Togo.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_TG">
+    <meta name="geo.region" content="TG">
+    <meta name="geo.placename" content="Lomé, Togo">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://mqityrifhiaarwdcacxo.supabase.co">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+        crossorigin="anonymous">
+    <link rel="stylesheet" href="css/styles.css">
+
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <style>
+        html {
+            visibility: hidden
+        }
+
+        html.ready {
+            visibility: visible
+        }
+    </style>
+    <script>document.addEventListener("DOMContentLoaded", function () { document.documentElement.classList.add("ready") });</script>
+    <meta property="og:type" content="website">
+    <script src="js/seo-meta.js"></script>
+  <meta property="og:image" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:secure_url" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Miralocks — Spécialiste locks à Lomé, Togo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <!-- Google Translate — masquer la barre du haut -->
+  <style id="google-translate-style">
+    body { top: 0 !important; }
+    .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame,
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    .goog-text-highlight { background: none !important; box-shadow: none !important; }
+    .skiptranslate { display: none !important; }
+  </style>
+</head>
+
+<body data-lightbox-managed="true">
+    <a href="#main" class="skip-link">Aller au contenu</a>
+    <div id="page-loader" role="status" aria-label="Chargement">
+        <div class="loader-logo"></div>
+    </div>
+    <nav class="nav" role="navigation" aria-label="Navigation principale">
+        <a href="index.html" class="nav-logo" aria-label="Miralocks — Accueil">
+            <picture>
+                <source srcset="assets/logo-transparent.webp" type="image/webp">
+                <img src="assets/logo-transparent.png" alt="Logo Miralocks" width="40" height="40" loading="eager"
+                    fetchpriority="high">
+            </picture>
+            <span>Miralocks</span>
+        </a>
+        <div class="nav-links" id="nav-links" role="menu">
+            <a href="index.html" class="">Accueil</a>
+            <a href="gallery.html" class="active">Galerie</a>
+            <a href="avant-apres.html" class="">Avant/Après</a>
+            <a href="services.html" class="">Services</a>
+            <a href="faq.html" class="">FAQ</a>
+            <a href="blog.html" class="">Blog</a>
+            <a href="about.html" class="">À propos</a>
+            <a href="avis.html" class="">Avis</a>
+            <a href="contact.html" class="">Contact</a>
+            <a href="rendezvous.html" class="btn btn-or nav-cta">Réserver</a>
+        </div>
+        <div class="nav-actions">
+            <button class="lang-selector" aria-label="Switch to English">
+                <span class="lang-current">FR</span>
+                <span class="lang-arrow">⌄</span>
+            </button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
+                <i class="fas fa-moon"></i>
+            </button>
+            <span class="nav-divider"></span>
+            <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="page-pad"></div>
+
+    <div class="page-hero" id="main">
+        <h1 class="fade-in">Notre Galerie</h1>
+        <p class="fade-in">Explorez nos créations et laissez-vous inspirer</p>
+    </div>
+
+    <section class="section" aria-label="Photos galerie">
+        <div class="container">
+            <!-- Photos depuis Supabase (ajoutées dynamiquement) + photos statiques -->
+            <div class="gallery-grid" id="gallery-grid">
+                <div class="gallery-item fade-in" data-index="0">
+                    <picture>
+                        <source srcset="images/locks1.webp" type="image/webp">
+                        <img src="images/locks1.jpg" alt="Création locks 1 — Miralocks" loading="eager" decoding="sync"
+                            width="400" height="533" fetchpriority="high" class="card-img">
+                    </picture>
+                    <div class="gallery-overlay"><span class="gallery-overlay-text"><i class="fas fa-search-plus"></i>
+                            Agrandir</span></div>
+                </div>
+                <div class="gallery-item fade-in" data-index="1">
+                    <picture>
+                        <source srcset="images/locks2.webp" type="image/webp">
+                        <img src="images/locks2.jpg" alt="Création locks 2 — Miralocks" loading="eager" decoding="sync"
+                            width="400" height="533" fetchpriority="high" class="card-img">
+                    </picture>
+                    <div class="gallery-overlay"><span class="gallery-overlay-text"><i class="fas fa-search-plus"></i>
+                            Agrandir</span></div>
+                </div>
+                <div class="gallery-item fade-in" data-index="2">
+                    <picture>
+                        <source srcset="images/locks3.webp" type="image/webp">
+                        <img src="images/locks3.jpg" alt="Création locks 3 — Miralocks" loading="eager" decoding="sync"
+                            width="400" height="533" fetchpriority="high" class="card-img">
+                    </picture>
+                    <div class="gallery-overlay"><span class="gallery-overlay-text"><i class="fas fa-search-plus"></i>
+                            Agrandir</span></div>
+                </div>
+                <div class="gallery-item fade-in" data-index="3">
+                    <picture>
+                        <source srcset="images/locks4.webp" type="image/webp">
+                        <img src="images/locks4.jpg" alt="Création locks 4 — Miralocks" loading="lazy" decoding="async"
+                            width="400" height="533" class="card-img">
+                    </picture>
+                    <div class="gallery-overlay"><span class="gallery-overlay-text"><i class="fas fa-search-plus"></i>
+                            Agrandir</span></div>
+                </div>
+                <div class="gallery-item fade-in" data-index="4">
+                    <picture>
+                        <source srcset="images/locks5.webp" type="image/webp">
+                        <img src="images/locks5.jpg" alt="Création locks 5 — Miralocks" loading="lazy" decoding="async"
+                            width="400" height="533" class="card-img">
+                    </picture>
+                    <div class="gallery-overlay"><span class="gallery-overlay-text"><i class="fas fa-search-plus"></i>
+                            Agrandir</span></div>
+                </div>
+                <div class="gallery-item fade-in" data-index="5">
+                    <picture>
+                        <source srcset="images/locks6.webp" type="image/webp">
+                        <img src="images/locks6.jpg" alt="Création locks 6 — Miralocks" loading="lazy" decoding="async"
+                            width="400" height="533" class="card-img">
+                    </picture>
+                    <div class="gallery-overlay"><span class="gallery-overlay-text"><i class="fas fa-search-plus"></i>
+                            Agrandir</span></div>
+                </div>
+            </div>
+
+            <!-- Section vidéos depuis Supabase -->
+            <div id="videos-section" style="display:none;margin-top:3rem">
+                <h2 style="color:var(--texte-titre);text-align:center;margin-bottom:2rem">Nos Vidéos</h2>
+                <div class="gallery-grid" id="videos-grid"></div>
+            </div>
+        </div>
+    </section>
+
+    <script src="js/supabase.js"></script>
+    <script>
+        /* ── Lightbox pour les photos ── */
+        function initLightbox(photoItems) {
+            const lightbox = document.getElementById('lightbox');
+            if (!lightbox) return;
+            const lbImg = lightbox.querySelector('.lightbox-img');
+            const lbVideoWrap = lightbox.querySelector('.lightbox-video-wrap');
+            if (!lbImg) return;
+            let current = 0;
+
+            const openLightbox = (index) => {
+                current = index;
+                lbImg.src = photoItems[current].src;
+                lbImg.alt = photoItems[current].alt || '';
+                lbImg.style.display = 'block';
+                if (lbVideoWrap) lbVideoWrap.style.display = 'none';
+                lightbox.classList.add('open');
+                document.body.style.overflow = 'hidden';
+            };
+            const closeLightbox = () => {
+                lightbox.classList.remove('open');
+                document.body.style.overflow = '';
+                if (lbVideoWrap) lbVideoWrap.innerHTML = ''; // Arrêter la vidéo
+            };
+            const navigate = (dir) => {
+                current = (current + dir + photoItems.length) % photoItems.length;
+                lbImg.style.opacity = '0';
+                setTimeout(() => {
+                    lbImg.src = photoItems[current].src;
+                    lbImg.alt = photoItems[current].alt || '';
+                    lbImg.style.opacity = '1';
+                }, 180);
+            };
+
+            // Attacher les événements une seule fois (pas de cloneNode nécessaire ici avec cette logique)
+            lightbox.querySelector('.lightbox-close').onclick = closeLightbox;
+            lightbox.querySelector('.lightbox-prev').onclick = (e) => { e.stopPropagation(); navigate(-1); };
+            lightbox.querySelector('.lightbox-next').onclick = (e) => { e.stopPropagation(); navigate(1); };
+            lightbox.onclick = e => { if (e.target === lightbox) closeLightbox(); };
+
+            photoItems.forEach((item, i) => {
+                item.el.onclick = () => openLightbox(i);
+            });
+        }
+
+        /* ── Charger les photos depuis Supabase ── */
+        async function loadGaleriePublic() {
+            try {
+                const photos = await sb.galerie.list(true);
+                if (photos && photos.length) {
+                    const grid = document.getElementById('gallery-grid');
+                    // NE PAS effacer les photos statiques — ajouter les photos Supabase en bas
+                    photos.forEach(p => {
+                        const div = document.createElement('div');
+                        div.className = 'gallery-item fade-in visible';
+                        const img = document.createElement('img');
+                        img.src = p.photo_url;
+                        img.alt = p.titre || 'Photo Miralocks';
+                        img.loading = 'lazy';
+                        img.decoding = 'async';
+                        // Réservation d'espace (Ratio 3:4 typique pour vos photos)
+                        img.width = 400;
+                        img.height = 533;
+                        const overlay = document.createElement('div');
+                        overlay.className = 'gallery-overlay';
+                        overlay.innerHTML = `<span class="gallery-overlay-text"><i class="fas fa-search-plus"></i> Agrandir</span>${p.titre ? `<p style="color:#fff;font-size:.8rem;margin-top:.3rem">${p.titre}</p>` : ''}`;
+                        div.appendChild(img);
+                        div.appendChild(overlay);
+                        grid.appendChild(div);
+                    });
+                }
+            } catch (e) {
+                // Erreur silencieuse
+            }
+
+            // Toujours initialiser le lightbox — même si Supabase échoue ou est vide
+            const photoItems = Array.from(document.querySelectorAll('#gallery-grid .gallery-item'))
+                .filter(el => el.querySelector('img'))
+                .map(el => ({
+                    el,
+                    src: el.querySelector('img').src,
+                    alt: el.querySelector('img').alt || ''
+                }));
+            initLightbox(photoItems);
+        }
+
+        /* ── Charger les vidéos depuis Supabase ── */
+        async function loadVideosPublic() {
+            try {
+                const vids = await sb.videos.list(true);
+                if (!vids || !vids.length) return;
+                const section = document.getElementById('videos-section');
+                const grid = document.getElementById('videos-grid');
+                section.style.display = 'block';
+                vids.forEach(v => {
+                    const div = document.createElement('div');
+                    div.className = 'gallery-item fade-in visible';
+                    div.style.cursor = 'pointer';
+                    div.onclick = () => playVideo(v.video_url, v.titre);
+                    // Miniature OU fond coloré si pas de miniature
+                    const thumbHTML = v.thumbnail_url
+                        ? `<img src="${v.thumbnail_url}" alt="${v.titre}" loading="lazy"
+               style="width:100%;height:100%;object-fit:cover;display:block">`
+                        : `<div style="width:100%;height:100%;background:linear-gradient(135deg,#0C3320,#1B6B45);display:flex;align-items:center;justify-content:center">
+             <i class="fas fa-film" style="font-size:3rem;color:rgba(255,255,255,.3)"></i>
+           </div>`;
+                    div.innerHTML = `
+        ${thumbHTML}
+        <div class="gallery-overlay always-visible" style="background:rgba(0,0,0,.45)">
+          <div style="text-align:center;width:100%">
+            <i class="fas fa-play-circle" style="font-size:3rem;color:#fff;display:block;margin-bottom:.5rem;text-shadow:0 2px 8px rgba(0,0,0,.5)"></i>
+            <p style="color:#fff;font-size:.85rem;font-weight:600;margin:0;text-shadow:0 1px 4px rgba(0,0,0,.7)">${v.titre}</p>
+          </div>
+        </div>`;
+                    grid.appendChild(div);
+                });
+            } catch (e) {
+                // Erreur silencieuse
+            }
+        }
+
+        /* ── Lecteur vidéo amélioré ── */
+        function playVideo(url, titre) {
+            const lb = document.getElementById('lightbox');
+            if (!lb) return;
+            const lbImg = lb.querySelector('.lightbox-img');
+            const lbVideoWrap = lb.querySelector('.lightbox-video-wrap');
+
+            if (lbImg) lbImg.style.display = 'none';
+            lb.querySelectorAll('.lightbox-prev, .lightbox-next').forEach(b => b.style.display = 'none');
+
+            lbVideoWrap.style.display = 'block';
+            lbVideoWrap.innerHTML = `
+                <div style="width:min(95vw,800px); padding:0 .5rem">
+                    <p style="color:var(--or); text-align:center; margin-bottom:1rem; font-weight:600; font-size:clamp(.85rem,2.5vw,1.1rem)">${titre}</p>
+                    <video src="${url}" controls autoplay playsinline style="width:100%; border-radius:8px; max-height:75vh"></video>
+                </div>`;
+
+            lb.classList.add('open');
+            document.body.style.overflow = 'hidden';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () { loadGaleriePublic(); });
+        document.addEventListener('DOMContentLoaded', function () { loadVideosPublic(); });
+    </script>
+
+    <div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Galerie">
+        <button class="lightbox-close" aria-label="Fermer"><i class="fas fa-times"></i></button>
+        <button class="lightbox-prev" aria-label="Précédent"><i class="fas fa-chevron-left"></i></button>
+        <img class="lightbox-img" src="" alt="" loading="lazy">
+        <div class="lightbox-video-wrap" style="display:none; width:100%; display:flex; justify-content:center; align-items:center;"></div>
+        <button class="lightbox-next" aria-label="Suivant"><i class="fas fa-chevron-right"></i></button>
+    </div>
+
+    <a href="https://wa.me/22897989001" class="whatsapp-float" aria-label="Contacter sur WhatsApp" target="_blank"
+        rel="noopener"><i class="fab fa-whatsapp"></i></a>
+    <div class="cookie-banner" role="dialog" aria-label="Cookies">
+        <p class="cookie-text">Nous utilisons des cookies pour améliorer votre expérience. <a
+                href="confidentialite.html">En savoir plus</a></p>
+        <div class="cookie-btns">
+            <button class="btn btn-or cookie-accept" style="padding:.4rem 1rem;font-size:.85rem">Accepter</button>
+            <button class="btn btn-vert cookie-refuse" style="padding:.4rem 1rem;font-size:.85rem">Refuser</button>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <picture>
+                        <source srcset="assets/logo-or.avif" type="image/avif">
+                        <source srcset="assets/logo-or.webp" type="image/webp"><img src="assets/logo-or.png"
+                            alt="Logo Miralocks" width="120" height="120" loading="lazy"
+                            style="filter:none;width:120px;height:auto">
+                    </picture>
+                </div>
+                <p class="footer-desc">Spécialiste des locks à Lomé, Togo. Expertise, passion et bienveillance pour
+                    sublimer vos cheveux naturels.</p>
+                <div class="footer-socials" style="margin-top:1.25rem">
+                    <a href="https://www.instagram.com/institut_Miralocks" target="_blank" rel="noopener"
+                        class="social-btn instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/mira.lachocote" target="_blank" rel="noopener"
+                        class="social-btn facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.tiktok.com/@institut_mira_locks228" target="_blank" rel="noopener"
+                        class="social-btn tiktok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://wa.me/22897989001" target="_blank" rel="noopener" class="social-btn whatsapp"
+                        aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="footer-heading">Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="gallery.html">Galerie</a></li>
+                    <li><a href="avant-apres.html">Avant / Après</a></li>
+                    <li><a href="services.html">Services & Tarifs</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="about.html">À propos</a></li>
+                    <li><a href="avis.html">Témoignages</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-heading">Horaires</h3>
+                <ul class="footer-links">
+                    <li>Mardi – Vendredi : 08h00–18h00</li>
+                    <li>Samedi : 08h00–18h00</li>
+                    <li style="color:rgba(201,168,76,.6);margin-top:.5rem">Fermé Dimanche & Lundi</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-heading">Contact</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-phone" style="color:var(--or);width:18px"></i> <a href="tel:+22897989001" style="color:inherit;text-decoration:none;">+228 97 98 90 01</a></li>
+                    <li><i class="fas fa-map-marker-alt" style="color:var(--or);width:18px"></i> Agoè Cacaveli, Lomé
+                    </li>
+                    <li style="margin-top:1rem"><a href="rendezvous.html" class="btn btn-or"
+                            style="padding:.5rem 1.25rem;font-size:.9rem">Prendre RDV</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Miralocks — Tous droits réservés</span>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+                <a href="mentions-legales.html">Mentions légales</a>
+                <a href="confidentialite.html">Confidentialité</a>
+            </div>
+        </div>
+    </footer>
+    <script src="js/main.js" defer></script>
+    <script src="js/register-sw.js" defer></script>
+  <script src="js/lang.js" defer></script>
+</body>
+
+</html>

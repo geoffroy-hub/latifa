@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#0C3320">
+  <title>503 — Service indisponible | Miralocks</title>
+  <meta name="robots" content="noindex">
+  <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+  <link rel="manifest" href="manifest.json">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    crossorigin="anonymous">
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+
+<body>
+  <div class="error-page">
+    <div class="error-inner">
+      <div class="error-logo">
+        <picture>
+          <source srcset="assets/logo-transparent.webp" type="image/webp">
+          <img src="assets/logo-transparent.png" alt="Miralocks" width="48" height="48">
+        </picture>
+      </div>
+      <div class="error-icon-wrap"><i class="fas fa-tools"></i></div>
+      <div class="error-code">503</div>
+      <h1 class="error-title">Service temporairement indisponible</h1>
+      <p class="error-desc">Le site est en maintenance. Nous serons de retour très bientôt !</p>
+      <div class="error-actions">
+        <button onclick="window.location.reload()" class="btn btn-or"><i class="fas fa-redo"></i> Réessayer</button>
+      </div>
+      <div class="error-contact">
+        <p>Pour prendre rendez-vous pendant la maintenance :</p>
+        <a href="https://wa.me/22897989001" target="_blank" rel="noopener" class="error-wa">
+          <i class="fab fa-whatsapp"></i> <a href="tel:+22897989001" style="color:inherit;text-decoration:none;">+228 97 98 90 01</a>
+        </a>
+      </div>
+    </div>
+  </div>
+  <script src="js/register-sw.js" defer></script>
+</body>
+
+</html>

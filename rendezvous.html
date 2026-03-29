@@ -1,0 +1,641 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#0C3320">
+    <title>Prendre RDV | Miralocks Lomé</title>
+    <meta name="description"
+        content="Réservez votre rendez-vous à Miralocks de Lomé. Formulaire en ligne, réponse rapide via WhatsApp.">
+    <meta name="robots" content="index, follow">
+    <meta property="og:title" content="Prendre RDV | Miralocks Lomé">
+    <meta property="og:description"
+        content="Réservez votre rendez-vous à Miralocks de Lomé. Formulaire en ligne, réponse rapide via WhatsApp.">
+    <meta property="og:type" content="website">
+    <meta property="og:locale" content="fr_TG">
+    <meta name="geo.region" content="TG">
+    <meta name="geo.placename" content="Lomé, Togo">
+    <link rel="canonical" href="https://mira-locks.vercel.app/rendezvous.html">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://mqityrifhiaarwdcacxo.supabase.co">
+    <link rel="dns-prefetch" href="https://cdnjs.cloudflare.com">
+    <link rel="stylesheet"
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700;900&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.css"
+        crossorigin="anonymous">
+    <!-- EmailJS (Confirmations par email) -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <link rel="preload" href="css/styles.css" as="style">
+  <link rel="stylesheet" href="css/styles.css">
+
+    <link rel="icon" type="image/x-icon" href="assets/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="assets/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="assets/favicon-16.png">
+    <link rel="apple-touch-icon" href="assets/apple-touch-icon.png">
+    <link rel="manifest" href="manifest.json">
+    <script>
+        // Bugfix 2 : Injection thématique native propre
+        var __theme = localStorage.getItem('Miralocks_theme') || 'light';
+        document.documentElement.dataset.theme = __theme;
+    </script>
+    <!-- Open Graph / WhatsApp preview -->
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Miralocks">    <script src="js/seo-meta.js"></script>
+      <meta property="og:image" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:secure_url" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/jpeg">
+  <meta property="og:image:alt" content="Miralocks — Spécialiste locks à Lomé, Togo">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:image" content="https://mira-locks.vercel.app/assets/og-image.jpg">
+  <!-- Google Translate — masquer la barre du haut -->
+  <style id="google-translate-style">
+    body { top: 0 !important; }
+    .goog-te-banner-frame, #goog-gt-tt, .goog-te-balloon-frame,
+    .goog-tooltip, .goog-tooltip:hover { display: none !important; }
+    .goog-text-highlight { background: none !important; box-shadow: none !important; }
+    .skiptranslate { display: none !important; }
+  </style>
+</head>
+
+<body>
+    <a href="#main" class="skip-link">Aller au contenu</a>
+    <div id="page-loader" role="status" aria-label="Chargement">
+        <div class="loader-logo"></div>
+    </div>
+    <nav class="nav" role="navigation" aria-label="Navigation principale">
+        <a href="index.html" class="nav-logo" aria-label="Miralocks — Accueil">
+            <picture>
+                <source srcset="assets/logo-transparent.webp" type="image/webp">
+                <img src="assets/logo-transparent.png" alt="Logo Miralocks" width="40" height="40" loading="eager"
+                    fetchpriority="high">
+            </picture>
+            <span>Miralocks</span>
+        </a>
+        <div class="nav-links" id="nav-links" role="menu">
+            <a href="index.html" data-t="nav.home">Accueil</a>
+            <a href="gallery.html" data-t="nav.gallery">Galerie</a>
+            <a href="avant-apres.html" data-t="nav.before_after">Avant/Après</a>
+            <a href="services.html" data-t="nav.services">Services</a>
+            <a href="faq.html" data-t="nav.faq">FAQ</a>
+            <a href="blog.html" data-t="nav.blog">Blog</a>
+            <a href="about.html" data-t="nav.about">À propos</a>
+            <a href="avis.html" data-t="nav.avis">Avis</a>
+            <a href="contact.html" data-t="nav.contact">Contact</a>
+            <a href="rendezvous.html" class="btn btn-or nav-cta active" data-t="nav.rdv">Réserver</a>
+        </div>
+        <div class="nav-actions">
+            <button class="lang-selector" aria-label="Switch to English">
+                <span class="lang-current">FR</span>
+                <span class="lang-arrow">⌄</span>
+            </button>
+            <button id="theme-toggle" class="theme-toggle" aria-label="Changer le thème">
+                <i class="fas fa-moon"></i>
+            </button>
+            <span class="nav-divider"></span>
+            <button class="hamburger" aria-label="Menu" aria-expanded="false" aria-controls="nav-links">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </nav>
+    <div class="page-pad"></div>
+
+
+    <div class="page-hero" id="main">
+        <h1 class="fade-in">Prendre Rendez-vous</h1>
+        <p class="fade-in">Réservez votre séance en quelques secondes</p>
+    </div>
+
+    <section class="section" aria-label="Formulaire de rendez-vous">
+        <div class="rdv-form fade-in">
+            <div style="background:#fff;border-radius:var(--rayon-lg);padding:2.5rem;box-shadow:var(--ombre)">
+                <form id="rdvForm" novalidate>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="nom">Nom complet *</label>
+                            <input type="text" id="nom" name="nom" class="form-control" placeholder="Votre nom" required
+                                autocomplete="name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="tel">Téléphone*</label>
+                            <input type="tel" id="tel" name="tel" class="form-control" placeholder="+22890000000"
+                                required autocomplete="tel">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="email">Email <span style="font-size:12px;opacity:.7">(pour recevoir la confirmation)</span></label>
+                        <input type="email" id="email" name="email" class="form-control" placeholder="votre@email.com" autocomplete="email">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="service">Service souhaité *</label>
+                        <select id="service" name="service" class="form-control" required>
+                            <option value="">Choisir un service…</option>
+                            <optgroup label="Soins">
+                                <option>Shampooing locks (2 000 FCFA)</option>
+                                <option>Shampooing + Massage (4 000 FCFA)</option>
+                                <option>Shampooing + Massage + Bain vapeur (5 000 FCFA)</option>
+                            </optgroup>
+                            <optgroup label="Entretien">
+                                <option>Resserrage standard moyen (8 000 FCFA)</option>
+                                <option>Resserrage standard mid (10 000 FCFA)</option>
+                                <option>Resserrage standard micro (12 000 FCFA)</option>
+                                <option>Resserrage enfants (7 000 FCFA)</option>
+                            </optgroup>
+                            <optgroup label="Création">
+                                <option>Crochet instantané moyen (25 000 FCFA)</option>
+                                <option>Crochet instantané mid (35 000 FCFA)</option>
+                                <option>Crochet instantané micro (60 000 FCFA)</option>
+                                <option>Interlocking Sisterlocks moyen (50 000 FCFA)</option>
+                                <option>Interlocking Sisterlocks mid (70 000 FCFA)</option>
+                                <option>Interlocking Sisterlocks micro (100 000 FCFA)</option>
+                                <option>Départ Twist moyen (20 000 FCFA)</option>
+                                <option>Départ Twist mid (30 000 FCFA)</option>
+                                <option>Départ Twist micro (45 000 FCFA)</option>
+                            </optgroup>
+                            <optgroup label="Finitions">
+                                <option>Teinture partielle (dès 5 000 FCFA)</option>
+                                <option>Défaire locks (dès 15 000 FCFA)</option>
+                            </optgroup>
+                        </select>
+                    </div>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label class="form-label" for="date">Date souhaitée *</label>
+                            <input type="date" id="date" name="date" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label" for="heure">Heure souhaitée</label>
+                            <select id="heure" name="heure" class="form-control">
+                                <option value="">Choisir…</option>
+                                <option>08:00</option>
+                                <option>09:00</option>
+                                <option>10:00</option>
+                                <option>11:00</option>
+                                <option>12:00</option>
+                                <option>13:00</option>
+                                <option>14:00</option>
+                                <option>15:00</option>
+                                <option>16:00</option>
+                                <option>17:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label" for="message">Message (optionnel)</label>
+                        <textarea id="message" name="message" class="form-control"
+                            placeholder="Informations complémentaires sur vos locks…" rows="4"></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ajouter une photo (recommandé)</label>
+                        <input type="file" id="photo" name="photo" class="form-control" accept="image/jpeg,image/jpg,image/png,image/webp,image/heic,image/heif">
+                        <small style="display:block;margin-top:.4rem;opacity:.8">Pour nous aider à mieux comprendre vos besoins (vos locks actuelles, modèle choisi...)</small>
+                        <!-- Prévisualisation photo -->
+                        <div id="photo-preview-wrap" style="display:none;margin-top:.85rem;text-align:center;">
+                            <img id="photo-preview-img" src="" alt="Aperçu de votre photo" style="max-width:100%;max-height:220px;border-radius:10px;border:2px solid var(--or,#C9A84C);object-fit:contain;box-shadow:0 2px 12px rgba(0,0,0,.12);">
+                            <div style="margin-top:.4rem;font-size:.8rem;color:#666;display:flex;align-items:center;justify-content:center;gap:.4rem;">
+                                <i class="fas fa-check-circle" style="color:#16A34A"></i>
+                                <span id="photo-preview-name"></span>
+                                <button type="button" id="photo-remove-btn" style="background:none;border:none;cursor:pointer;color:#DC2626;font-size:.8rem;margin-left:.3rem;" title="Supprimer la photo">
+                                    <i class="fas fa-times"></i> Supprimer
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-whatsapp" style="width:100%;padding:1rem">
+                        <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+                    </button>
+                    <p style="text-align:center;font-size:.85rem;margin-top:1rem;opacity:0.8">
+                        Votre demande sera envoyée directement sur WhatsApp. Nous vous répondrons dans les 2h.
+                    </p>
+                </form>
+            </div>
+
+            <div
+                style="background:var(--vert);border-radius:var(--rayon-lg);padding:2rem;margin-top:2rem;color:rgba(250,250,248,.85)">
+                <h3 style="color:var(--or);margin-bottom:1rem">📍 Nos horaires</h3>
+                <p>Mardi – Samedi : <strong style="color:var(--or)">08h00 – 18h00</strong></p>
+                <p style="margin-top:.5rem">Fermé Dimanche et Lundi</p>
+                <hr style="border-color:rgba(201,168,76,.2);margin:1.25rem 0">
+                <p>📞 <a href="tel:+22897989001" style="color:var(--or)">+228 97 98 90 01</a></p>
+                <p style="margin-top:.5rem">📍 Agoè Cacaveli, près école La Source — Lomé</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Modal de confirmation avant envoi -->
+    <div id="rdv-confirm-modal" style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);align-items:center;justify-content:center;padding:1rem;">
+        <div style="background:#fff;border-radius:16px;padding:2rem;max-width:480px;width:100%;box-shadow:0 24px 60px rgba(0,0,0,.3);max-height:90vh;overflow-y:auto;color:#1a1a1a;">
+            <div style="text-align:center;margin-bottom:1.25rem;">
+                <div style="font-size:2.2rem;margin-bottom:.5rem;">✅</div>
+                <h2 style="font-size:1.25rem;color:#0C3320;margin-bottom:.25rem;">Confirmer votre rendez-vous</h2>
+                <p style="font-size:.85rem;color:#666;">Vérifiez vos informations avant d'envoyer</p>
+            </div>
+            <div id="rdv-confirm-recap" style="background:#f9f7f2;border-radius:10px;padding:1.25rem;font-size:.9rem;line-height:1.9;border:1px solid #e8e2d9;color:#1a1a1a;"></div>
+            <div id="rdv-confirm-photo-wrap" style="display:none;margin-top:.85rem;text-align:center;">
+                <p style="font-size:.8rem;color:#666;margin-bottom:.4rem;"><i class="fas fa-image" style="color:#C9A84C"></i> Photo jointe :</p>
+                <img id="rdv-confirm-photo-img" src="" alt="Photo jointe" style="max-width:100%;max-height:160px;border-radius:8px;border:1.5px solid #C9A84C;object-fit:contain;">
+            </div>
+            <div style="display:flex;gap:.75rem;margin-top:1.5rem;">
+                <button id="rdv-confirm-cancel" type="button" style="flex:1;padding:.85rem;border:2px solid #e5e5e5;border-radius:10px;background:#fff;color:#555;font-size:.95rem;cursor:pointer;font-weight:600;transition:all .2s;">
+                    <i class="fas fa-arrow-left"></i> Modifier
+                </button>
+                <button id="rdv-confirm-send" type="button" style="flex:2;padding:.85rem;background:#25D366;color:#fff;border-radius:10px;font-size:.95rem;font-weight:700;cursor:pointer;border:none;transition:all .2s;display:flex;align-items:center;justify-content:center;gap:.5rem;">
+                    <i class="fab fa-whatsapp"></i> Envoyer via WhatsApp
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <a href="https://wa.me/22897989001" class="whatsapp-float" aria-label="Contacter sur WhatsApp" target="_blank"
+        rel="noopener"><i class="fab fa-whatsapp"></i></a>
+    <div class="cookie-banner" role="dialog" aria-label="Cookies">
+        <p class="cookie-text">Nous utilisons des cookies pour améliorer votre expérience. <a
+                href="confidentialite.html">En savoir plus</a></p>
+        <div class="cookie-btns">
+            <button class="btn btn-or cookie-accept" style="padding:.4rem 1rem;font-size:.85rem">Accepter</button>
+            <button class="btn btn-vert cookie-refuse" style="padding:.4rem 1rem;font-size:.85rem">Refuser</button>
+        </div>
+    </div>
+    <footer class="footer">
+        <div class="footer-grid">
+            <div>
+                <div class="footer-logo">
+                    <picture>
+                        <source srcset="assets/logo-or.avif" type="image/avif">
+                        <source srcset="assets/logo-or.webp" type="image/webp"><img src="assets/logo-or.png"
+                            alt="Logo Miralocks" width="120" height="120" loading="lazy"
+                            style="filter:none;width:120px;height:auto">
+                    </picture>
+                </div>
+                <p class="footer-desc">Spécialiste des locks à Lomé, Togo. Expertise, passion et bienveillance pour
+                    sublimer vos cheveux naturels.</p>
+                <div class="footer-socials" style="margin-top:1.25rem">
+                    <a href="https://www.instagram.com/institut_Miralocks" target="_blank" rel="noopener"
+                        class="social-btn instagram" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="https://www.facebook.com/mira.lachocote" target="_blank" rel="noopener"
+                        class="social-btn facebook" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                    <a href="https://www.tiktok.com/@institut_mira_locks228" target="_blank" rel="noopener"
+                        class="social-btn tiktok" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="https://wa.me/22897989001" target="_blank" rel="noopener" class="social-btn whatsapp"
+                        aria-label="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                </div>
+            </div>
+            <div>
+                <h3 class="footer-heading">Navigation</h3>
+                <ul class="footer-links">
+                    <li><a href="gallery.html">Galerie</a></li>
+                    <li><a href="avant-apres.html">Avant / Après</a></li>
+                    <li><a href="services.html">Services & Tarifs</a></li>
+                    <li><a href="faq.html">FAQ</a></li>
+                    <li><a href="blog.html">Blog</a></li>
+                    <li><a href="about.html">À propos</a></li>
+                    <li><a href="avis.html">Témoignages</a></li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-heading">Horaires</h3>
+                <ul class="footer-links">
+                    <li>Mardi – Vendredi : 08h00–18h00</li>
+                    <li>Samedi : 08h00–18h00</li>
+                    <li style="color:rgba(201,168,76,.6);margin-top:.5rem">Fermé Dimanche & Lundi</li>
+                </ul>
+            </div>
+            <div>
+                <h3 class="footer-heading">Contact</h3>
+                <ul class="footer-links">
+                    <li><i class="fas fa-phone" style="color:var(--or);width:18px"></i> <a href="tel:+22897989001"
+                            style="color:inherit;text-decoration:none;">+228 97 98 90 01</a></li>
+                    <li><i class="fas fa-map-marker-alt" style="color:var(--or);width:18px"></i> Agoè Cacaveli, Lomé
+                    </li>
+                    <li style="margin-top:1rem"><a href="rendezvous.html" class="btn btn-or"
+                            style="padding:.5rem 1.25rem;font-size:.9rem">Prendre RDV</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>© 2026 Miralocks — Tous droits réservés</span>
+            <div style="display:flex;gap:1.5rem;flex-wrap:wrap">
+                <a href="mentions-legales.html">Mentions légales</a>
+                <a href="confidentialite.html">Confidentialité</a>
+            </div>
+        </div>
+    </footer>
+    <script src="js/supabase.js"></script>
+    <!-- Flatpickr (Calendrier personnalisé) -->
+
+    <script src="js/main.js" defer></script>
+    <script src="js/register-sw.js" defer></script>
+    <script>
+        /* ── Formulaire RDV : sauvegarde Supabase + WhatsApp ─────── */
+        (function () {
+            const form = document.getElementById('rdvForm');
+            if (!form) return;
+
+            let _pendingPhotoFile = null;
+
+            /* ── 1. PRÉVISUALISATION DE LA PHOTO ── */
+            const photoInput  = form.querySelector('#photo');
+            const previewWrap = document.getElementById('photo-preview-wrap');
+            const previewImg  = document.getElementById('photo-preview-img');
+            const previewName = document.getElementById('photo-preview-name');
+            const removeBtn   = document.getElementById('photo-remove-btn');
+
+            photoInput && photoInput.addEventListener('change', function() {
+                const file = this.files[0];
+                if (!file) { previewWrap.style.display = 'none'; _pendingPhotoFile = null; return; }
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    previewImg.src = e.target.result;
+                    const label = file.name.length > 28 ? file.name.substring(0,25)+'…' : file.name;
+                    previewName.textContent = label + ' (' + Math.round(file.size/1024) + ' Ko)';
+                    previewWrap.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+                _pendingPhotoFile = file;
+            });
+
+            removeBtn && removeBtn.addEventListener('click', function() {
+                photoInput.value = '';
+                previewWrap.style.display = 'none';
+                previewImg.src = '';
+                _pendingPhotoFile = null;
+            });
+
+            /* ── 2. VALIDATION NUMÉRO DE TÉLÉPHONE ── */
+            function validatePhone(value) {
+                if (!value || !value.trim()) return false;
+                return /^\+\d{6,15}$/.test(value.trim().replace(/[\s\-().]/g, ''));
+            }
+
+            function showFieldError(fieldId, msg) {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+                field.style.borderColor = '#DC2626';
+                let errEl = field.parentNode.querySelector('.field-error');
+                if (!errEl) {
+                    errEl = document.createElement('small');
+                    errEl.className = 'field-error';
+                    errEl.style.cssText = 'color:#DC2626;font-size:.8rem;display:block;margin-top:.3rem;';
+                    field.parentNode.appendChild(errEl);
+                }
+                errEl.innerHTML = '<i class="fas fa-exclamation-circle"></i> ' + msg;
+            }
+
+            function clearFieldError(fieldId) {
+                const field = document.getElementById(fieldId);
+                if (!field) return;
+                field.style.borderColor = '';
+                const errEl = field.parentNode.querySelector('.field-error');
+                if (errEl) errEl.remove();
+            }
+
+            const telInput = document.getElementById('tel');
+            if (telInput) {
+                telInput.addEventListener('blur', function() {
+                    if (this.value.trim() && !validatePhone(this.value)) {
+                        showFieldError('tel', 'Format invalide. Ex\u00a0: +22890000000 ou +33612345678');
+                    } else { clearFieldError('tel'); }
+                });
+                telInput.addEventListener('input', function() {
+                    if (this.value.trim() && validatePhone(this.value)) clearFieldError('tel');
+                });
+            }
+
+            /* ── Chargement des services dynamiques ── */
+            async function loadServices() {
+                const select = form.querySelector('#service');
+                if (!select) return;
+                try {
+                    const services = await sb.services.list(true);
+                    if (services && services.length > 0) {
+                        const cats = [...new Set(services.map(s => s.categorie || 'Autres'))];
+                        let html = '<option value="" disabled selected>Choisir une prestation\u2026</option>';
+                        cats.forEach(cat => {
+                            html += `<optgroup label="${cat}">`;
+                            services.filter(s => (s.categorie || 'Autres') === cat).forEach(s => {
+                                html += `<option value="${s.nom} ${s.prix ? `(${s.prix} FCFA)` : ''}">${s.nom} ${s.prix ? `\u2014 ${s.prix} FCFA` : ''}</option>`;
+                            });
+                            html += '</optgroup>';
+                        });
+                        select.innerHTML = html;
+                    }
+                } catch (e) {
+                    console.warn('Erreur chargement services :', e.message);
+                }
+            }
+            loadServices();
+
+            /* ── Calendrier natif : min = aujourd'hui, max = +14 jours ── */
+            (function() {
+                const dateInput = document.getElementById('date');
+                if (!dateInput) return;
+
+                function pad(n) { return String(n).padStart(2, '0'); }
+                function toISO(d) {
+                    return d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+                }
+
+                // Trouver le premier jour disponible (pas dim=0, pas lun=1)
+                function firstAvailable(from) {
+                    const d = new Date(from);
+                    while (d.getDay() === 0 || d.getDay() === 1) {
+                        d.setDate(d.getDate() + 1);
+                    }
+                    return d;
+                }
+
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                const maxDate = new Date(today);
+                maxDate.setDate(today.getDate() + 14);
+
+                dateInput.min = toISO(firstAvailable(today));
+                dateInput.max = toISO(maxDate);
+
+                // Bloquer dim et lun à la sélection
+                dateInput.addEventListener('change', function() {
+                    if (!this.value) return;
+                    const chosen = new Date(this.value + 'T12:00:00');
+                    const day = chosen.getDay();
+                    if (day === 0 || day === 1) {
+                        this.setCustomValidity('Fermé le dimanche et le lundi. Choisissez un autre jour.');
+                        this.reportValidity();
+                        this.value = '';
+                    } else {
+                        this.setCustomValidity('');
+                    }
+                });
+            })();
+
+
+            /* ── 3. ÉCRAN DE CONFIRMATION AVANT ENVOI ── */
+            const modal          = document.getElementById('rdv-confirm-modal');
+            const confirmRecap   = document.getElementById('rdv-confirm-recap');
+            const confirmPhoto   = document.getElementById('rdv-confirm-photo-wrap');
+            const confirmPhotoImg= document.getElementById('rdv-confirm-photo-img');
+            const cancelBtn      = document.getElementById('rdv-confirm-cancel');
+            const sendBtn        = document.getElementById('rdv-confirm-send');
+            let _pendingData     = null;
+
+            cancelBtn && cancelBtn.addEventListener('click', function() {
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+            });
+
+            modal && modal.addEventListener('click', function(e) {
+                if (e.target === modal) { modal.style.display = 'none'; document.body.style.overflow = ''; }
+            });
+
+            function openConfirmModal(data) {
+                _pendingData = data;
+                const d = new Date(data.date + 'T12:00:00');
+                const dateLabel = d.toLocaleDateString('fr-FR', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+                confirmRecap.innerHTML =
+                    '<div style="display:grid;gap:.35rem;color:#1a1a1a;">' +
+                    '<div>\ud83d\udc64 <strong>Nom\u00a0:</strong> ' + data.nom + '</div>' +
+                    '<div>\ud83d\udcde <strong>T\u00e9l\u00e9phone\u00a0:</strong> ' + data.tel + '</div>' +
+                    (data.email ? '<div>\ud83d\udce7 <strong>Email\u00a0:</strong> ' + data.email + '</div>' : '') +
+                    '<div>\ud83d\udc86 <strong>Service\u00a0:</strong> ' + data.service + '</div>' +
+                    '<div>\ud83d\udcc5 <strong>Date\u00a0:</strong> ' + dateLabel + '</div>' +
+                    '<div>\ud83d\udd50 <strong>Heure\u00a0:</strong> ' + (data.heure || 'Non pr\u00e9cis\u00e9e') + '</div>' +
+                    (data.message ? '<div>\ud83d\udcdd <strong>Message\u00a0:</strong> ' + data.message + '</div>' : '') +
+                    '</div>';
+
+                // NE PAS réécrire _pendingPhotoFile ici — la compression l'a déjà défini
+                if (_pendingPhotoFile && previewImg && previewImg.src && previewImg.src !== window.location.href) {
+                    confirmPhotoImg.src = previewImg.src;
+                    confirmPhoto.style.display = 'block';
+                } else {
+                    confirmPhoto.style.display = 'none';
+                }
+
+                modal.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+
+            /* ── Soumission → ouvre la modal ── */
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const data = Object.fromEntries(new FormData(form));
+
+                if (!data.nom?.trim()) { showFieldError('nom', 'Le nom est obligatoire.'); return; }
+                else { clearFieldError('nom'); }
+
+                if (!data.tel?.trim()) { showFieldError('tel', 'Le t\u00e9l\u00e9phone est obligatoire.'); return; }
+                else if (!validatePhone(data.tel)) { showFieldError('tel', 'Format invalide. Ex\u00a0: +22890000000'); return; }
+                else { clearFieldError('tel'); }
+
+                if (!data.service) { showRdvFeedback('Veuillez s\u00e9lectionner un service.', 'error'); return; }
+                if (!data.date)    { showRdvFeedback('Veuillez choisir une date.', 'error'); return; }
+
+                openConfirmModal(data);
+            });
+
+            /* ── Envoi réel depuis la modal ── */
+            sendBtn && sendBtn.addEventListener('click', async function() {
+                const data = _pendingData;
+                if (!data) return;
+
+                modal.style.display = 'none';
+                document.body.style.overflow = '';
+
+                /* ── 1. Construire le message WhatsApp IMMÉDIATEMENT (sync)
+                        pour contourner le popup blocker iOS/Android
+                        qui bloque window.open() après un await ── */
+                const d2 = new Date(data.date + 'T12:00:00');
+                const dateLabel2 = d2.toLocaleDateString('fr-FR', {weekday:'long',day:'numeric',month:'long',year:'numeric'});
+
+                const msg =
+                    '━━━━━━━━━━━━━━━━━━━━━\n' +
+                    '📋 *NOUVELLE DEMANDE DE RDV*\n' +
+                    '🏠 Institut Miralocks — Lomé\n' +
+                    '━━━━━━━━━━━━━━━━━━━━━\n\n' +
+                    '👤 *Nom :* ' + data.nom + '\n' +
+                    '📞 *Téléphone :* ' + data.tel + '\n' +
+                    (data.email ? '📧 *Email :* ' + data.email + '\n' : '') +
+                    '\n' +
+                    '💆 *Service :* ' + data.service + '\n' +
+                    '📅 *Date :* ' + dateLabel2 + '\n' +
+                    '🕐 *Heure :* ' + (data.heure || 'Non précisée') + '\n' +
+                    (data.message ? '\n📝 *Message :* ' + data.message + '\n' : '') +
+                    '\n━━━━━━━━━━━━━━━━━━━━━\n' +
+                    '_Envoyé via mira-locks.vercel.app_';
+
+                const waUrl = 'https://wa.me/22897989001?text=' + encodeURIComponent(msg);
+
+                /* ── 2. Capturer le fichier photo maintenant (avant tout reset) ── */
+                const capturedPhoto = _pendingPhotoFile;
+                const capturedData  = {
+                    nom:      data.nom.trim(),
+                    tel:      data.tel.trim(),
+                    email:    data.email?.trim() || null,
+                    service:  data.service,
+                    date_rdv: data.date,
+                    heure:    data.heure || null,
+                    message:  data.message?.trim() || null,
+                };
+
+                /* ── 3. Sauvegarde Supabase EN PREMIER (avant navigation WhatsApp) ── */
+                const btn = form.querySelector('button[type="submit"]');
+                btn.disabled = true;
+                btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Envoi en cours…';
+
+                try {
+                    let photoUrl = null;
+                    if (capturedPhoto) {
+                        console.log('📸 Upload:', capturedPhoto.name, Math.round(capturedPhoto.size/1024)+'Ko');
+                        try {
+                            photoUrl = await sb.publicUpload('rendezvous', capturedPhoto);
+                            console.log('✅ Photo uploadée:', photoUrl);
+                        } catch (uploadErr) {
+                            console.error('❌ Upload photo échoué:', uploadErr.message);
+                        }
+                    }
+                    await sb.rdv.create({ ...capturedData, photo_url: photoUrl });
+                    console.log('✅ RDV sauvegardé, photo_url:', photoUrl);
+                } catch (err) {
+                    console.error('❌ RDV save error:', err.message, err);
+                }
+
+                try {
+                    await sb.invoke('send-confirmation', capturedData);
+                } catch (err) { console.warn('Email error:', err.message); }
+
+                _pendingPhotoFile = null;
+                form.reset();
+                if (previewWrap) { previewWrap.style.display = 'none'; previewImg.src = ''; }
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fab fa-whatsapp"></i> Envoyer via WhatsApp';
+
+                /* ── 4. Ouvrir WhatsApp APRÈS la sauvegarde ── */
+                window.open(waUrl, '_blank');
+            });
+
+            function showRdvFeedback(msg, type) {
+                let el = document.getElementById('rdv-feedback');
+                if (!el) {
+                    el = document.createElement('div');
+                    el.id = 'rdv-feedback';
+                    el.style.cssText = 'margin-top:1rem;padding:.85rem 1.1rem;border-radius:8px;font-size:.9rem;font-weight:500;';
+                    form.parentNode.insertBefore(el, form.nextSibling);
+                }
+                el.style.background = type === 'success' ? '#d1fae5' : '#fee2e2';
+                el.style.color      = type === 'success' ? '#065f46' : '#991b1b';
+                el.style.border     = '1px solid ' + (type === 'success' ? '#6ee7b7' : '#fca5a5');
+                el.innerHTML = '<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + '"></i> ' + msg;
+                el.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                if (type === 'success') setTimeout(() => el.remove(), 6000);
+            }
+        })();
+    </script>
+  <script src="js/lang.js" defer></script>
+</body>
+
+</html>

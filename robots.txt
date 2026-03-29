@@ -1,0 +1,7 @@
+User-agent: *
+Allow: /
+Disallow: /admin.html
+Disallow: /admin
+Disallow: /cgi-bin/
+
+Sitemap: https://miralocks.com/sitemap.xml
