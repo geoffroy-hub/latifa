@@ -968,17 +968,16 @@ function startWishesLoop() {
 		setTimeout(spawnWishMessage, i * 700);
 	}
 
-	// Images : max 3 simultanées, réparties gauche / centre / droite, jamais superposées
+	// Images : max 2 simultanées, une nouvelle image toutes les 5-6 secondes
 	let imageIndex = 0;
 	function scheduleNextImage() {
 		if (wishesStopped) return;
 		if (loadedImages.length === 0) return;
 		const activeImages = appNodes.wishesLayer.querySelectorAll('.wish-image-wrapper');
 		const count = activeImages.length;
-		// Max 3 images en même temps
-		if (count < 3) {
-			const toSpawn = 3 - count;
-			for (let i = 0; i < toSpawn; i++) spawnWishImage();
+		// Max 2 images en même temps
+		if (count < 2) {
+			spawnWishImage();
 		}
 		const nextDelay = 900 + Math.random() * 400; // Vérification toutes les 0.9-1.3s
 		setTimeout(scheduleNextImage, nextDelay);
