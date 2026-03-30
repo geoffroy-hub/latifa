@@ -71,47 +71,6 @@
 				}
 			}
 
-			/* ===== GRILLE DE PHOTOS ===== */
-			.photo-grid-overlay {
-				position: absolute;
-				inset: 0;
-				z-index: 9;
-				display: grid;
-				grid-template-columns: repeat(4, 1fr);
-				grid-template-rows: repeat(4, 1fr);
-				gap: 6px;
-				padding: 8px;
-				pointer-events: none;
-				opacity: 0;
-				animation: gridFadeIn 1.5s ease forwards 1s;
-			}
-			@keyframes gridFadeIn {
-				from { opacity: 0; transform: scale(0.95); }
-				to   { opacity: 1; transform: scale(1); }
-			}
-			.photo-grid-overlay .pg-item {
-				position: relative;
-				overflow: hidden;
-				border-radius: 10px;
-				border: 2px solid rgba(255,105,180,0.6);
-				box-shadow: 0 0 10px rgba(255,105,180,0.5);
-			}
-			.photo-grid-overlay .pg-item:nth-child(1) {
-				grid-column: 1 / 3;
-				grid-row: 1 / 3;
-			}
-			.photo-grid-overlay .pg-item:nth-child(11) {
-				grid-column: 3 / 5;
-				grid-row: 3 / 5;
-			}
-			.photo-grid-overlay .pg-item img {
-				width: 100%;
-				height: 100%;
-				object-fit: cover;
-				display: block;
-			}
-			/* ============================= */
-
 			/* Layer chứa lời chúc bay trên nền pháo hoa */
 			.wishes-layer {
 				position: absolute;
@@ -799,22 +758,6 @@
 				<div class="canvas-container">
 					<canvas id="trails-canvas"> </canvas>
 					<canvas id="main-canvas"> </canvas>
-				</div>
-				<!-- Grille de photos -->
-				<div class="photo-grid-overlay" id="photoGrid">
-					<div class="pg-item"><img src="images/b1.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b2.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b3.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b4.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b5.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b6.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b7.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b8.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b9.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b10.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b11.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b12.webp" alt="Latifa"></div>
-					<div class="pg-item"><img src="images/b13.webp" alt="Latifa"></div>
 				</div>
 				<!-- Layer lời chúc bay trên trời -->
 				<div class="wishes-layer" id="wishes-layer"></div>
