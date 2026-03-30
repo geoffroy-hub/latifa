@@ -83,7 +83,6 @@ let imageSources = [
 	"./images/b10.webp",
 	"./images/b11.webp",
 	"./images/b12.webp",
-	"./images/b13.webp",
 ];
 const loadedImages = [];
 const imageBursts = [];
@@ -739,32 +738,31 @@ function spawnWishImage() {
 	imgElement.alt = "Wish Image";
 	wrapper.appendChild(imgElement);
 
-	// Position horizontale par zones pour éviter les chevauchements
+	// Position horizontale : 3 slots fixes — gauche, centre, droite — jamais superposés
 	const imgSize = Math.min(window.innerWidth, window.innerHeight) * 0.42;
 	const safeMarginPx = imgSize / 2 + 8;
 	const safeMarginPercent = (safeMarginPx / window.innerWidth) * 100;
 	const minX = safeMarginPercent;
 	const maxX = 100 - safeMarginPercent;
 
-	// Zones fixes : gauche, centre, droite
-	const zones = [minX, (minX + maxX) / 2, maxX];
-	// Trouver les zones déjà occupées par les images actives
+	// 3 slots : gauche, centre, droite
+	const slots = [minX, (minX + maxX) / 2, maxX];
+	// Trouver le slot libre
 	const activeImgs = layer.querySelectorAll('.wish-image-wrapper');
-	const usedZones = new Set();
+	const usedSlots = new Set();
 	activeImgs.forEach(el => {
 		const left = parseFloat(el.style.left);
-		zones.forEach((z, i) => { if (Math.abs(left - z) < 20) usedZones.add(i); });
+		slots.forEach((s, i) => { if (Math.abs(left - s) < 15) usedSlots.add(i); });
 	});
-	// Choisir une zone libre, sinon la moins utilisée
-	const freeZones = zones.map((z, i) => i).filter(i => !usedZones.has(i));
-	const zoneIndex = freeZones.length > 0
-		? freeZones[(Math.random() * freeZones.length) | 0]
-		: (Math.random() * zones.length) | 0;
-	const leftPercent = zones[zoneIndex] + (Math.random() - 0.5) * 8; // légère variance
-	wrapper.style.left = Math.max(minX, Math.min(maxX, leftPercent)) + "%";
+	const freeSlots = slots.map((s, i) => i).filter(i => !usedSlots.has(i));
+	const slotIndex = freeSlots.length > 0
+		? freeSlots[0]
+		: (Math.random() * slots.length) | 0;
+	const leftPercent = slots[slotIndex];
+	wrapper.style.left = leftPercent + "%";
 
-	// Décalage vertical basé sur la zone pour éviter que les images soient sur la même ligne
-	const verticalOffset = zoneIndex * 18 + (Math.random() * 12); // 0-12%, 18-30%, 36-48% selon la zone
+	// Même décalage vertical pour les 2 images — elles montent côte à côte sur la même ligne
+	const verticalOffset = Math.random() * 8; // légère variance identique pour les 2
 	const duration = 4;
 	wrapper.style.animationDelay = `-${(verticalOffset / 100) * duration}s`;
 	wrapper.style.animationDuration = duration + "s";
@@ -970,24 +968,22 @@ function startWishesLoop() {
 		setTimeout(spawnWishMessage, i * 700);
 	}
 
-	// Images : beaucoup d'images, sans surplus (min 4, max 5 simultanees)
+	// Images : max 3 simultanées, réparties gauche / centre / droite, jamais superposées
 	let imageIndex = 0;
 	function scheduleNextImage() {
 		if (wishesStopped) return;
 		if (loadedImages.length === 0) return;
 		const activeImages = appNodes.wishesLayer.querySelectorAll('.wish-image-wrapper');
 		const count = activeImages.length;
-		// Min 4, max 5 images en meme temps
-		if (count < 4) {
-			const toSpawn = 4 - count;
+		// Max 3 images en même temps
+		if (count < 3) {
+			const toSpawn = 3 - count;
 			for (let i = 0; i < toSpawn; i++) spawnWishImage();
-		} else if (count < 5) {
-			spawnWishImage();
 		}
-		const nextDelay = 800 + Math.random() * 400; // Verification toutes les 0.8-1.2s
+		const nextDelay = 900 + Math.random() * 400; // Vérification toutes les 0.9-1.3s
 		setTimeout(scheduleNextImage, nextDelay);
 	}
-	setTimeout(scheduleNextImage, 300); // Premiere image des 300ms
+	setTimeout(scheduleNextImage, 300); // Première image dès 300ms
 
 	// Messages réguliers (sans images mélangées)
 	wishesIntervalId = setInterval(() => {
