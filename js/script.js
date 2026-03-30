@@ -83,6 +83,7 @@ let imageSources = [
 	"./images/b10.webp",
 	"./images/b11.webp",
 	"./images/b12.webp",
+	"./images/b13.webp",
 ];
 const loadedImages = [];
 const imageBursts = [];
