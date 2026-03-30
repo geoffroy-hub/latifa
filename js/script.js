@@ -71,18 +71,19 @@ randomWords.forEach((word) => {
 
 // Ảnh dùng cho hiệu ứng nổ (hiển thị hình ảnh ngẫu nhiên tại điểm nổ)
 let imageSources = [
-	"./images/b1.webp",
-	"./images/b2.webp",
-	"./images/b3.webp",
-	"./images/b4.webp",
-	"./images/b5.webp",
-	"./images/b6.webp",
-	"./images/b7.webp",
-	"./images/b8.webp",
-	"./images/b9.webp",
-	"./images/b10.webp",
-	"./images/b11.webp",
-	"./images/b12.webp",
+	"./images/b1.jpeg",
+	"./images/b2.jpeg",
+	"./images/b3.jpeg",
+	"./images/b4.jpeg",
+	"./images/b5.jpeg",
+	"./images/b6.jpeg",
+	"./images/b7.jpeg",
+	"./images/b8.jpeg",
+	"./images/b9.jpeg",
+	"./images/b10.jpeg",
+	"./images/b11.jpeg",
+	"./images/b12.jpeg",
+	"./images/b13.jpeg",
 ];
 const loadedImages = [];
 const imageBursts = [];
